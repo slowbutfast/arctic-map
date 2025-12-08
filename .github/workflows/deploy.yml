@@ -22,6 +22,7 @@ on:
 # Environment variables used across all jobs
 env:
   GCP_REGION: us-east1-docker.pkg.dev
+  region: us-east1
   # gcp_project_id: salap-ayca-artic-map
   ARTIFACT_REGISTRY_REPO: arctic-map-repo
   SERVICE_NAME: community-arctic-map
@@ -221,7 +222,7 @@ jobs:
         id: get-url
         run: |
           SERVICE_URL=$(gcloud run services describe ${{ env.SERVICE_NAME }} \
-            --region=${{ env.GCP_REGION }} \
+            --region=${{ env.region }} \
             --format='value(status.url)')
           echo "service_url=$SERVICE_URL" >> $GITHUB_OUTPUT
           echo "🌐 Service URL: $SERVICE_URL"
@@ -240,7 +241,7 @@ jobs:
             echo "✅ Service is responding correctly (HTTP $HTTP_CODE)"
           else
             echo "⚠️ Service returned HTTP $HTTP_CODE"
-            echo "Please check the logs: gcloud run logs read ${{ env.SERVICE_NAME }} --region=${{ env.GCP_REGION }}"
+            echo "Please check the logs: gcloud run logs read ${{ env.SERVICE_NAME }} --region=${{ env.region }}"
           fi
 
       - name: 📝 Deployment summary
@@ -296,4 +297,4 @@ jobs:
         run: |
           echo "⚠️ Deployment failed. Consider manual rollback if needed."
           echo "To rollback, run:"
-          echo "gcloud run services update-traffic ${{ env.SERVICE_NAME }} --to-revisions=PREVIOUS_REVISION=100 --region=${{ env.GCP_REGION }}"
+          echo "gcloud run services update-traffic ${{ env.SERVICE_NAME }} --to-revisions=PREVIOUS_REVISION=100 --region=${{ env.region }}"
