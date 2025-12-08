@@ -25,11 +25,11 @@ env:
   region: us-east1
   # gcp_project_id: salap-ayca-artic-map
   ARTIFACT_REGISTRY_REPO: arctic-map-repo
-  SERVICE_NAME: ${{ github.event.repository.name }}-release
+  SERVICE_NAME: community-arctic-map
   gcp_project_id: salap-ayca-artic-map
   gcp_registry_url: us-east1-docker.pkg.dev
   gcp_container_registry: arctic-map-repo
-  image: ${{ github.event.repository.name }}-release
+  image: community-arctic-map
   
 
 jobs:
