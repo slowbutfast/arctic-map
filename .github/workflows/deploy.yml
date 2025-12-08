@@ -206,6 +206,7 @@ jobs:
         id: "deploy"
         with:
           service: ${{ env.image }}
+          region: ${{ env.region }}
           project_id: ${{ env.gcp_project_id }}
           image: ${{ env.gcp_registry_url }}/${{ env.gcp_project_id }}/${{ env.gcp_container_registry }}/${{ env.image }}:latest
           flags: >-
