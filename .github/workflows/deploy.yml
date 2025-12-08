@@ -25,7 +25,7 @@ env:
   region: us-east1
   # gcp_project_id: salap-ayca-artic-map
   ARTIFACT_REGISTRY_REPO: arctic-map-repo
-  SERVICE_NAME: community-arctic-map
+  SERVICE_NAME: ${{ github.event.repository.name }}-release
   gcp_project_id: salap-ayca-artic-map
   gcp_registry_url: us-east1-docker.pkg.dev
   gcp_container_registry: arctic-map-repo
@@ -170,6 +170,9 @@ jobs:
         with:
           push: true
           tags: ${{ env.gcp_registry_url }}/${{ env.gcp_project_id }}/${{ env.gcp_container_registry }}/${{ env.image }}:latest
+          build-args: |
+            VITE_MAPBOX_ACCESS_TOKEN=${{ secrets.VITE_MAPBOX_ACCESS_TOKEN }}
+
 
 
       # - name: 🔐 Configure Docker for Artifact Registry
