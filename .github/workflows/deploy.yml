@@ -27,7 +27,7 @@ env:
   SERVICE_NAME: community-arctic-map
   gcp_project_id: salap-ayca-artic-map
   gcp_registry_url: us-east1-docker.pkg.dev
-  gcp_container_registry: cloud-run
+  gcp_container_registry: arctic-map-repo
   image: ${{ github.event.repository.name }}-release
   
 
