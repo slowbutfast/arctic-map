@@ -102,7 +102,7 @@ jobs:
       - name: 📊 Setup deployment metadata
         id: setup
         run: |
-          echo "project_id=${{ secrets.GCP_PROJECT_ID }}" >> $GITHUB_OUTPUT
+          echo "project_id=${{ env.gcp_project_id }}" >> $GITHUB_OUTPUT
           echo "image_tag=${GITHUB_SHA::7}" >> $GITHUB_OUTPUT
           echo "✅ Prepare phase completed successfully"
 
@@ -110,7 +110,7 @@ jobs:
         run: |
           echo "Checking required secrets..."
           
-          if [ -z "${{ secrets.GCP_PROJECT_ID }}" ]; then
+          if [ -z "${{ env.gcp_project_id }}" ]; then
             echo "❌ gcp_project_id secret is missing"
             exit 1
           fi
@@ -152,7 +152,7 @@ jobs:
       - name: 🔧 Setup Cloud SDK
         uses: google-github-actions/setup-gcloud@v2
         with:
-          project_id: ${{ secrets.GCP_PROJECT_ID }}
+          project_id: ${{ env.gcp_project_id }}
 
       - uses: docker/login-action@v3
         with:
@@ -289,7 +289,7 @@ jobs:
         if: needs.deploy.result == 'failure'
         uses: google-github-actions/setup-gcloud@v2
         with:
-          project_id: ${{ secrets.GCP_PROJECT_ID }}
+          project_id: ${{ env.gcp_project_id }}
 
       - name: 🔄 Rollback on failure (optional)
         if: needs.deploy.result == 'failure'
