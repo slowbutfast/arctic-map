@@ -209,6 +209,10 @@ jobs:
           region: ${{ env.region }}
           project_id: ${{ env.gcp_project_id }}
           image: ${{ env.gcp_registry_url }}/${{ env.gcp_project_id }}/${{ env.gcp_container_registry }}/${{ env.image }}:latest
+          env-vars: |
+            PORT=8080
+            GOOGLE_SHEET_ID=${{ secrets.GOOGLE_SHEET_ID }}
+            GOOGLE_SHEET_GID=${{ secrets.GOOGLE_SHEET_GID }}
           flags: >-
               --allow-unauthenticated
               --service-account=${{ env.SERVICE_NAME }}-sa@${{ env.gcp_project_id }}.iam.gserviceaccount.com
