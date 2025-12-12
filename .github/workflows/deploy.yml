@@ -169,7 +169,6 @@ jobs:
           project_id: ${{ env.gcp_project_id }}
           image: ${{ env.gcp_registry_url }}/${{ env.gcp_project_id }}/${{ env.gcp_container_registry }}/${{ env.image }}:latest
           env_vars: |-
-            PORT=8080
             GOOGLE_SHEET_ID=${{ secrets.GOOGLE_SHEET_ID }}
             GOOGLE_SHEET_GID=${{ secrets.GOOGLE_SHEET_GID }}
           flags: >-
