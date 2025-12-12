@@ -175,34 +175,6 @@ jobs:
             GOOGLE_SHEET_ID=${{ secrets.GOOGLE_SHEET_ID }}
             GOOGLE_SHEET_GID=${{ secrets.GOOGLE_SHEET_GID }}
 
-
-
-      # - name: 🔐 Configure Docker for Artifact Registry
-      #   run: |
-      #     gcloud auth configure-docker ${{ env.GCP_REGION }}-docker.pkg.dev --quiet
-      #     echo "✅ Docker configured for Artifact Registry"
-
-      # - name: 🏗️ Build Docker image
-      #   run: |
-      #     docker build \
-      #       -f .deployment/Dockerfile \
-      #       -t ${{ env.GCP_REGION }}-docker.pkg.dev/${{ secrets.GCP_PROJECT_ID }}/${{ env.ARTIFACT_REGISTRY_REPO }}/${{ env.SERVICE_NAME }}:${{ needs.prepare.outputs.image_tag }} \
-      #       -t ${{ env.GCP_REGION }}-docker.pkg.dev/${{ secrets.GCP_PROJECT_ID }}/${{ env.ARTIFACT_REGISTRY_REPO }}/${{ env.SERVICE_NAME }}:latest \
-      #       --build-arg VITE_MAPBOX_ACCESS_TOKEN=${{ secrets.VITE_MAPBOX_ACCESS_TOKEN }} \
-      #       --build-arg VITE_API_BASE_URL=/api \
-      #       --build-arg VITE_DOWNLOAD_API_URL=/api/download \
-      #       . 2>&1 | tee docker-build.log
-          
-      #     echo "✅ Docker image built successfully"
-      #   timeout-minutes: 15
-
-      # - name: 📤 Push Docker image to Artifact Registry
-      #   run: |
-      #     docker push ${{ env.GCP_REGION }}-docker.pkg.dev/${{ secrets.GCP_PROJECT_ID }}/${{ env.ARTIFACT_REGISTRY_REPO }}/${{ env.SERVICE_NAME }}:${{ needs.prepare.outputs.image_tag }}
-      #     docker push ${{ env.GCP_REGION }}-docker.pkg.dev/${{ secrets.GCP_PROJECT_ID }}/${{ env.ARTIFACT_REGISTRY_REPO }}/${{ env.SERVICE_NAME }}:latest
-      #     echo "✅ Docker images pushed successfully"
-        timeout-minutes: 10
-
       - name: 🚀 Deploy to Cloud Run
         uses: 'google-github-actions/deploy-cloudrun@v2'
         id: "deploy"
@@ -218,25 +190,6 @@ jobs:
           flags: >-
               --allow-unauthenticated
               --service-account=${{ env.SERVICE_NAME }}-sa@${{ env.gcp_project_id }}.iam.gserviceaccount.com
-
-        # run: |
-        #   gcloud run deploy ${{ env.SERVICE_NAME }} \
-        #     --image=${{ env.region }}-docker.pkg.dev/${{ env.gcp_project_id }}/${{ env.ARTIFACT_REGISTRY_REPO }}/${{ env.SERVICE_NAME }}:${{ needs.prepare.outputs.image_tag }} \
-        #     --region=${{ env.region }} \
-        #     --platform=managed \
-        #     --allow-unauthenticated \
-        #     --service-account=${{ env.SERVICE_NAME }}-sa@${{ secrets.gcp_project_id }}.iam.gserviceaccount.com \
-        #     --memory=4Gi \
-        #     --cpu=2 \
-        #     --timeout=300 \
-        #     --max-instances=10 \
-        #     --min-instances=0 \
-        #     --set-env-vars="PORT=8080,GOOGLE_SHEET_ID=${{ secrets.GOOGLE_SHEET_ID }},GOOGLE_SHEET_GID=${{ secrets.GOOGLE_SHEET_GID }},gcp_project_id=${{ secrets.GCP_PROJECT_ID }}" \
-        #     --no-cpu-throttling \
-        #     --quiet 2>&1 | tee deploy.log
-          
-      #     echo "✅ Cloud Run deployment completed"
-      #   timeout-minutes: 10
 
       - name: 🔍 Get service URL
         id: get-url
