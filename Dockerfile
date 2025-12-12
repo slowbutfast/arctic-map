@@ -71,6 +71,7 @@ COPY --from=frontend-builder /app/frontend/dist ./frontend/dist
 COPY .deployment/scripts/download-database.sh /app/scripts/download-database.sh
 COPY .deployment/scripts/start.sh /app/start.sh
 RUN chmod +x /app/scripts/download-database.sh /app/start.sh
+# RUN chmod +x /app/start.sh
 
 # Create directory for the SQLite database file
 # This will be populated by the download script at startup
@@ -80,7 +81,7 @@ RUN mkdir -p /app/backend
 RUN pip install --no-cache-dir aiofiles
 
 # Expose port (Cloud Run will set the PORT environment variable)
-EXPOSE 8080
+EXPOSE 8080 8000 8001
 
 # Set working directory to backend
 WORKDIR /app/backend
