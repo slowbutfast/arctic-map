@@ -23,7 +23,6 @@ on:
 env:
   GCP_REGION: us-east1-docker.pkg.dev
   region: us-east1
-  # gcp_project_id: salap-ayca-artic-map
   ARTIFACT_REGISTRY_REPO: arctic-map-repo
   SERVICE_NAME: community-arctic-map
   gcp_project_id: salap-ayca-artic-map
@@ -85,20 +84,6 @@ jobs:
           cd frontend
           npm run lint || echo "⚠️ Linting warnings detected"
         continue-on-error: true
-
-      - name: 🏗️ Build frontend
-        if: ${{ !inputs.skip_tests }}
-        run: |
-          cd frontend
-          # Use dummy values for build-time validation
-          # Note: This is a test build to validate the code compiles
-          # The actual deployment will use the real Mapbox token from GitHub Secrets
-          # Using a properly formatted token to match validation: pk. + 50+ chars
-          export VITE_MAPBOX_ACCESS_TOKEN=pk.eyJ1IjoidGVzdCIsImEiOiJ0ZXN0X3Rva2VuX2Zvcl92YWxpZGF0aW9uX29ubHlfMTIzNDU2Nzg5MCJ9
-          export VITE_API_BASE_URL=/api
-          export VITE_DOWNLOAD_API_URL=/api/download
-          npm run build | tee build.log
-        timeout-minutes: 10
 
       - name: 📊 Setup deployment metadata
         id: setup
