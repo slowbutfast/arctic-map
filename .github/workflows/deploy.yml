@@ -174,6 +174,10 @@ jobs:
           flags: >-
               --allow-unauthenticated
               --service-account=${{ env.SERVICE_NAME }}-sa@${{ env.gcp_project_id }}.iam.gserviceaccount.com
+              --timeout=300
+              --startup-cpu-boost
+              --cpu=2
+              --memory=2Gi
 
       - name: 🔍 Get service URL
         id: get-url
@@ -187,18 +191,33 @@ jobs:
       - name: ✅ Verify deployment
         run: |
           echo "Waiting for service to be ready..."
-          sleep 10
-          
           SERVICE_URL="${{ steps.get-url.outputs.service_url }}"
           
-          # Test health endpoint
-          HTTP_CODE=$(curl -s -o /dev/null -w "%{http_code}" "$SERVICE_URL/api/layer_hierarchy" || echo "000")
+          # Test health endpoint with retries
+          MAX_RETRIES=10
+          RETRY_COUNT=0
+          SUCCESS=false
           
-          if [ "$HTTP_CODE" = "200" ]; then
-            echo "✅ Service is responding correctly (HTTP $HTTP_CODE)"
-          else
-            echo "⚠️ Service returned HTTP $HTTP_CODE"
+          while [ $RETRY_COUNT -lt $MAX_RETRIES ]; do
+            HTTP_CODE=$(curl -s -o /dev/null -w "%{http_code}" "$SERVICE_URL/health" || echo "000")
+            
+            if [ "$HTTP_CODE" = "200" ]; then
+              echo "✅ Service is responding correctly (HTTP $HTTP_CODE)"
+              SUCCESS=true
+              break
+            else
+              RETRY_COUNT=$((RETRY_COUNT + 1))
+              echo "⏳ Attempt $RETRY_COUNT/$MAX_RETRIES - Service returned HTTP $HTTP_CODE"
+              if [ $RETRY_COUNT -lt $MAX_RETRIES ]; then
+                sleep 10
+              fi
+            fi
+          done
+          
+          if [ "$SUCCESS" = false ]; then
+            echo "❌ Service failed to respond after $MAX_RETRIES attempts"
             echo "Please check the logs: gcloud run logs read ${{ env.SERVICE_NAME }} --region=${{ env.region }}"
+            exit 1
           fi
 
       - name: 📝 Deployment summary
