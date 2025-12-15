@@ -14,8 +14,8 @@
     "@mapbox/mapbox-gl-geocoder": "^5.0.3",
     "@turf/turf": "^7.2.0",
     "mapbox-gl": "^3.11.0",
-    "react": "^19.0.0",
-    "react-dom": "^19.0.0"
+    "react": "^19.2.1",
+    "react-dom": "^19.2.1"
   },
   "devDependencies": {
     "@eslint/js": "^9.21.0",
