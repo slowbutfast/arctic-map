@@ -173,7 +173,7 @@ jobs:
               --allow-unauthenticated
               --service-account=${{ env.SERVICE_NAME }}-sa@${{ env.gcp_project_id }}.iam.gserviceaccount.com
               --timeout=300
-              --startup-cpu-boost
+              --cpu-boost
               --cpu=2
               --memory=2Gi
 
