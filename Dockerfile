@@ -20,16 +20,13 @@ RUN npm ci
 COPY frontend/ ./
 
 # Build frontend for production
-# Note: Build-time environment variables must be provided during docker build
+# Note: Mapbox token is only used during build and not stored in final image
+# The token will be embedded in the compiled JavaScript bundle
 ARG VITE_MAPBOX_ACCESS_TOKEN
-ARG GOOGLE_SHEET_ID
-ARG GOOGLE_SHEET_GID
 
-ENV VITE_MAPBOX_ACCESS_TOKEN=${VITE_MAPBOX_ACCESS_TOKEN}
-ENV GOOGLE_SHEET_ID=${GOOGLE_SHEET_ID}
-ENV GOOGLE_SHEET_GID=${GOOGLE_SHEET_GID}
-
-RUN npm run build
+# Use build args directly in RUN command to avoid persisting in ENV
+RUN VITE_MAPBOX_ACCESS_TOKEN=${VITE_MAPBOX_ACCESS_TOKEN} \
+    npm run build
 
 # =============================================================================
 # Stage 2: Production Runtime with FastAPI

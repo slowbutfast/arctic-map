@@ -157,8 +157,6 @@ jobs:
           tags: ${{ env.gcp_registry_url }}/${{ env.gcp_project_id }}/${{ env.gcp_container_registry }}/${{ env.image }}:latest
           build-args: |
             VITE_MAPBOX_ACCESS_TOKEN=${{ secrets.VITE_MAPBOX_ACCESS_TOKEN }}
-            GOOGLE_SHEET_ID=${{ secrets.GOOGLE_SHEET_ID }}
-            GOOGLE_SHEET_GID=${{ secrets.GOOGLE_SHEET_GID }}
 
       - name: 🚀 Deploy to Cloud Run
         uses: 'google-github-actions/deploy-cloudrun@v2'
