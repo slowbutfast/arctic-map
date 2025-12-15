@@ -25,6 +25,23 @@ fi
 # Change to backend directory
 cd /app/backend
 
+# Debug: List files in backend directory
+echo "[DEBUG] Contents of /app/backend:"
+ls -la /app/backend/
+
+# Debug: Check if Python files exist
+if [ -f "production.py" ]; then
+    echo "[DEBUG] ✅ production.py found"
+else
+    echo "[DEBUG] ❌ production.py NOT found"
+fi
+
+if [ -f "zip_downloads.py" ]; then
+    echo "[DEBUG] ✅ zip_downloads.py found"
+else
+    echo "[DEBUG] ❌ zip_downloads.py NOT found"
+fi
+
 # Start zip_downloads service on port 8001 in background
 echo "[INFO] Starting zip_downloads service on port 8001..."
 uvicorn zip_downloads:app --host 0.0.0.0 --port 8001 &

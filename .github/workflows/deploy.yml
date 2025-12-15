@@ -176,6 +176,8 @@ jobs:
               --cpu-boost
               --cpu=2
               --memory=2Gi
+              --clear-volumes
+              --clear-volume-mounts
               --add-volume=name=database,type=cloud-storage,bucket=${{ env.gcp_project_id }}-community-arctic-map-data
               --add-volume-mount=volume=database,mount-path=/app/database
 
