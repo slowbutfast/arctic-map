@@ -65,9 +65,9 @@ The Community Arctic Map is a full-stack geospatial web application consisting o
 You'll need values for these variables:
 
 **Application Secrets:**
-- `GOOGLE_SHEET_ID`: Google Sheet ID containing layer theme organization
-- `GOOGLE_SHEET_GID`: Google Sheet GID (tab identifier)
-- `VITE_MAPBOX_ACCESS_TOKEN`: Mapbox access token from https://account.mapbox.com/
+- `GOOGLE_SHEET_ID`: Google Sheet ID containing layer theme organization (runtime)
+- `GOOGLE_SHEET_GID`: Google Sheet GID (tab identifier) (runtime)
+- `VITE_MAPBOX_ACCESS_TOKEN`: Mapbox access token from https://account.mapbox.com/ (build-time)
 
 **GCP Configuration:**
 - `GCP_PROJECT_ID`: Your Google Cloud Project ID
@@ -286,8 +286,6 @@ docker build \
   -f .deployment/Dockerfile \
   -t us-east1-docker.pkg.dev/YOUR_PROJECT_ID/arctic-map-repo/community-arctic-map:latest \
   --build-arg VITE_MAPBOX_ACCESS_TOKEN=YOUR_MAPBOX_TOKEN \
-  --build-arg GOOGLE_SHEET_ID=YOUR_SHEET_ID \
-  --build-arg GOOGLE_SHEET_GID=YOUR_SHEET_GID \
   .
 
 # Push to Artifact Registry
@@ -535,6 +533,8 @@ gcloud run services update community-arctic-map \
 gh secret set VITE_MAPBOX_ACCESS_TOKEN --repo=YOUR_REPO
 ```
 
+**Note:** Security scanners may warn about VITE_MAPBOX_ACCESS_TOKEN in build args. This is expected and safe - Mapbox tokens are client-side keys meant to be public. Secure them via Mapbox dashboard settings (URL restrictions, scopes, rate limits).
+
 #### 2. Deployment Fails: "Permission denied"
 
 **Solution:** Check service account permissions:
@@ -647,10 +647,10 @@ After successful deployment:
 
 | Variable | Required | Description | Where Set |
 |----------|----------|-------------|-----------|
-| `PORT` | Yes | Port for Cloud Run (8080) | Cloud Run |
-| `GOOGLE_SHEET_ID` | Yes | Google Sheet ID for layer themes | GitHub Secrets |
-| `GOOGLE_SHEET_GID` | Yes | Google Sheet GID | GitHub Secrets |
-| `VITE_MAPBOX_ACCESS_TOKEN` | Yes | Mapbox token (build-time) | GitHub Secrets |
+| `PORT` | Yes | Port for Cloud Run (8080) | Cloud Run (auto) |
+| `GOOGLE_SHEET_ID` | Yes | Google Sheet ID for layer themes | GitHub Secrets → Cloud Run env |
+| `GOOGLE_SHEET_GID` | Yes | Google Sheet GID | GitHub Secrets → Cloud Run env |
+| `VITE_MAPBOX_ACCESS_TOKEN` | Yes | Mapbox token (build-time only) | GitHub Secrets → Docker build arg |
 | `GCP_PROJECT_ID` | Yes | GCP Project ID (CI/CD) | GitHub Secrets |
 | `GCP_SERVICE_ACCOUNT_KEY` | Yes | Service account key (CI/CD) | GitHub Secrets |
 
