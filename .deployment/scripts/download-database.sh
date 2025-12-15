@@ -4,7 +4,7 @@
 
 set -e
 
-DATABASE_PATH="/app/backend/cpad.sqlite"
+DATABASE_PATH="/app/database/cpad.sqlite"
 
 # Validate required environment variables
 if [ -z "$GCP_PROJECT_ID" ]; then

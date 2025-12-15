@@ -12,9 +12,9 @@ echo "Community Arctic Map - Startup"
 echo "=============================================="
 
 # Check if database is accessible from GCS mount
-echo "[INFO] Checking for database file at /app/backend/cpad.sqlite..."
-if [ -f /app/backend/cpad.sqlite ]; then
-    FILE_SIZE=$(du -h /app/backend/cpad.sqlite | cut -f1)
+echo "[INFO] Checking for database file at /app/database/cpad.sqlite..."
+if [ -f /app/database/cpad.sqlite ]; then
+    FILE_SIZE=$(du -h /app/database/cpad.sqlite | cut -f1)
     echo "[INFO] ✅ Database found (size: $FILE_SIZE)"
 else
     echo "[ERROR] ❌ Database not found at /app/backend/cpad.sqlite"

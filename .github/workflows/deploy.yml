@@ -177,7 +177,7 @@ jobs:
               --cpu=2
               --memory=2Gi
               --add-volume=name=database,type=cloud-storage,bucket=${{ env.gcp_project_id }}-community-arctic-map-data
-              --add-volume-mount=volume=database,mount-path=/app/backend
+              --add-volume-mount=volume=database,mount-path=/app/database
 
       - name: 🔍 Get service URL
         id: get-url
