@@ -33,8 +33,6 @@ fi
 # Change to backend directory
 cd /app/backend
 
-uvicorn main:app --host 0.0.0.0 --reload --port 8000 &
-
 # Start zip_downloads service on port 8001 in background
 echo "[INFO] Starting zip_downloads service on port 8001..."
 uvicorn zip_downloads:app --host 0.0.0.0 --port 8001 &
