@@ -60,15 +60,12 @@ COPY backend/ ./backend/
 # Copy built frontend from builder stage
 COPY --from=frontend-builder /app/frontend/dist ./frontend/dist
 
-# Copy database download script and startup script
-COPY .deployment/scripts/download-database.sh /app/scripts/download-database.sh
+# Copy startup script
 COPY .deployment/scripts/start.sh /app/start.sh
-RUN chmod +x /app/scripts/download-database.sh /app/start.sh
-# RUN chmod +x /app/start.sh
+RUN chmod +x /app/start.sh
 
-# Create directory for the SQLite database file
-# This will be populated by the download script at startup
-RUN mkdir -p /app/backend
+# GCS volume will be mounted at /app/backend at runtime
+# No need to create backend directory or download database
 
 # Install additional dependencies for serving static files
 RUN pip install --no-cache-dir aiofiles

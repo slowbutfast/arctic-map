@@ -11,23 +11,15 @@ echo "=============================================="
 echo "Community Arctic Map - Startup"
 echo "=============================================="
 
-# Download database if needed
-echo "[INFO] Checking for database file..."
-if [ -f /app/scripts/download-database.sh ] && [ -x /app/scripts/download-database.sh ]; then
-    if /app/scripts/download-database.sh; then
-        echo "[INFO] Database ready"
-    else
-        echo "[ERROR] Database download failed"
-        echo "[ERROR] Application may not function correctly without the database"
-        # Continue anyway - let the application handle the missing database
-        # The application will fail on first request if database is truly required
-    fi
-elif [ -f /app/scripts/download-database.sh ]; then
-    echo "[WARNING] Database download script exists but is not executable"
-    echo "[WARNING] Application may not function correctly without the database"
+# Check if database is accessible from GCS mount
+echo "[INFO] Checking for database file at /app/backend/cpad.sqlite..."
+if [ -f /app/backend/cpad.sqlite ]; then
+    FILE_SIZE=$(du -h /app/backend/cpad.sqlite | cut -f1)
+    echo "[INFO] ✅ Database found (size: $FILE_SIZE)"
 else
-    echo "[WARNING] Database download script not found"
-    echo "[WARNING] Application may not function correctly without the database"
+    echo "[ERROR] ❌ Database not found at /app/backend/cpad.sqlite"
+    echo "[ERROR] Please ensure cpad.sqlite is uploaded to the GCS bucket"
+    echo "[ERROR] Upload with: gsutil cp backend/cpad.sqlite gs://\${GCP_PROJECT_ID}-community-arctic-map-data/cpad.sqlite"
 fi
 
 # Change to backend directory

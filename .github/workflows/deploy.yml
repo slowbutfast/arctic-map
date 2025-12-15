@@ -176,6 +176,8 @@ jobs:
               --cpu-boost
               --cpu=2
               --memory=2Gi
+              --add-volume=name=database,type=cloud-storage,bucket=${{ env.gcp_project_id }}-community-arctic-map-data
+              --add-volume-mount=volume=database,mount-path=/app/backend
 
       - name: 🔍 Get service URL
         id: get-url
@@ -229,8 +231,8 @@ jobs:
           echo "" >> $GITHUB_STEP_SUMMARY
           echo "### 📋 Next Steps" >> $GITHUB_STEP_SUMMARY
           echo "1. Visit the service URL to verify the deployment" >> $GITHUB_STEP_SUMMARY
-          echo "2. Upload the cpad.sqlite file to Cloud Storage" >> $GITHUB_STEP_SUMMARY
-          echo "3. Update the Cloud Run service to mount the database" >> $GITHUB_STEP_SUMMARY
+          echo "2. Ensure cpad.sqlite is uploaded to Cloud Storage bucket" >> $GITHUB_STEP_SUMMARY
+          echo "   \`gsutil cp backend/cpad.sqlite gs://${{ env.gcp_project_id }}-community-arctic-map-data/cpad.sqlite\`" >> $GITHUB_STEP_SUMMARY
 
   # =============================================================================
   # Phase 3: TEARDOWN - Cleanup and rollback if needed
