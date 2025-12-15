@@ -286,8 +286,8 @@ docker build \
   -f .deployment/Dockerfile \
   -t us-east1-docker.pkg.dev/YOUR_PROJECT_ID/arctic-map-repo/community-arctic-map:latest \
   --build-arg VITE_MAPBOX_ACCESS_TOKEN=YOUR_MAPBOX_TOKEN \
-  --build-arg VITE_API_BASE_URL=/api \
-  --build-arg VITE_DOWNLOAD_API_URL=/api/download \
+  --build-arg GOOGLE_SHEET_ID=YOUR_SHEET_ID \
+  --build-arg GOOGLE_SHEET_GID=YOUR_SHEET_GID \
   .
 
 # Push to Artifact Registry

@@ -33,7 +33,7 @@ app.add_middleware(
     allow_headers=["*"],
 )
 
-DB_PATH = "/app/database/cpad.sqlite"
+DB_PATH = "/app/backend/cpad.sqlite"
 
 def get_available_layers():
     try:

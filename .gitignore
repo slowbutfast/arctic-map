@@ -30,3 +30,6 @@ deploy.log
 # Frontend build output
 frontend/dist/
 dist/
+
+# Env
+.env
