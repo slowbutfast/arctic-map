@@ -11,7 +11,7 @@ permissions:
 
 # Environment variables used across all jobs
 env:
-  GCP_PROJECT_ID: salap-ayca-artic-map
+  GCP_PROJECT_ID: salap-ayca-arctic-map
   GCP_REGION: us-east1
   REGISTRY_URL: us-east1-docker.pkg.dev
   ARTIFACT_REGISTRY_REPO: arctic-map-repo
