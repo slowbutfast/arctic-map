@@ -50,7 +50,11 @@ def get_db_path():
     return local_path
 
 DB_PATH = get_db_path()
-print(f"[INFO] Using database at: {DB_PATH}")
+
+@app.on_event("startup")
+async def startup_event():
+    """Log database path on application startup"""
+    print(f"[INFO] Using database at: {DB_PATH}")
 
 def get_available_layers():
     try:
