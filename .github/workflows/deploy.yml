@@ -162,6 +162,8 @@ jobs:
               --cpu-boost
               --cpu=2
               --memory=2Gi
+              --min-instances=0
+              --max-instances=1
               --clear-volumes
               --clear-volume-mounts
               --add-volume=name=database,type=cloud-storage,bucket=${{ env.GCP_PROJECT_ID }}-community-arctic-map-data
