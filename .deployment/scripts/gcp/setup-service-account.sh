@@ -11,7 +11,7 @@ YELLOW='\033[1;33m'
 NC='\033[0m' # No Color
 
 echo -e "${GREEN}==================================================================${NC}"
-echo -e "${GREEN}🔧 GCP Service Account Setup for Community Arctic Map${NC}"
+echo -e "${GREEN}🔧 GCP Service Account Setup for Arctic Map${NC}"
 echo -e "${GREEN}==================================================================${NC}"
 echo ""
 
@@ -42,7 +42,7 @@ fi
 gcloud config set project "$PROJECT_ID"
 
 # Variables
-SERVICE_NAME="community-arctic-map"
+SERVICE_NAME="arctic-map"
 SERVICE_ACCOUNT_NAME="${SERVICE_NAME}-sa"
 SERVICE_ACCOUNT_EMAIL="${SERVICE_ACCOUNT_NAME}@${PROJECT_ID}.iam.gserviceaccount.com"
 REGION="us-east1"
@@ -75,8 +75,8 @@ if gcloud iam service-accounts describe "$SERVICE_ACCOUNT_EMAIL" --project="$PRO
     echo -e "${YELLOW}⚠️  Service account already exists${NC}"
 else
     gcloud iam service-accounts create "$SERVICE_ACCOUNT_NAME" \
-        --display-name="Community Arctic Map Cloud Run Service Account" \
-        --description="Service account for running Community Arctic Map on Cloud Run" \
+        --display-name="Arctic Map Cloud Run Service Account" \
+        --description="Service account for running Arctic Map on Cloud Run" \
         --project="$PROJECT_ID"
     echo -e "${GREEN}✅ Service account created${NC}"
 fi
@@ -115,7 +115,7 @@ else
     gcloud artifacts repositories create "$ARTIFACT_REGISTRY_REPO" \
         --repository-format=docker \
         --location="$REGION" \
-        --description="Docker repository for Community Arctic Map" \
+        --description="Docker repository for Arctic Map" \
         --project="$PROJECT_ID"
     echo -e "${GREEN}✅ Artifact Registry repository created${NC}"
 fi

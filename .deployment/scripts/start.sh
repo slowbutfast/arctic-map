@@ -1,5 +1,5 @@
 #!/bin/bash
-# Startup script for Community Arctic Map on Cloud Run
+# Startup script for Arctic Map on Cloud Run
 # This script:
 # 1. Verifies the database file is accessible from GCS mount
 # 2. Starts the zip_downloads service on port 8001
@@ -8,7 +8,7 @@
 set -e
 
 echo "=============================================="
-echo "Community Arctic Map - Startup"
+echo "Arctic Map - Startup"
 echo "=============================================="
 
 # Check if database is accessible from GCS mount

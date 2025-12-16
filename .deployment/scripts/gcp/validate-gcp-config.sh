@@ -33,7 +33,7 @@ echo -e "${GREEN}📊 Validating Project: $PROJECT_ID${NC}"
 echo ""
 
 # Variables
-SERVICE_NAME="community-arctic-map"
+SERVICE_NAME="arctic-map"
 SERVICE_ACCOUNT_NAME="${SERVICE_NAME}-sa"
 SERVICE_ACCOUNT_EMAIL="${SERVICE_ACCOUNT_NAME}@${PROJECT_ID}.iam.gserviceaccount.com"
 REGION="us-east1"

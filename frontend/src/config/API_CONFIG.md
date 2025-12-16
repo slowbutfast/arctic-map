@@ -1,6 +1,6 @@
 # API Configuration System
 
-This document explains the centralized API URL configuration for the Community Arctic Map application.
+This document explains the centralized API URL configuration for the Arctic Map application.
 
 ## Overview
 

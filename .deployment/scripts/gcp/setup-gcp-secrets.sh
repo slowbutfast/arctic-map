@@ -11,7 +11,7 @@ YELLOW='\033[1;33m'
 NC='\033[0m' # No Color
 
 echo -e "${GREEN}==================================================================${NC}"
-echo -e "${GREEN}🔐 GCP Secret Manager Setup for Community Arctic Map${NC}"
+echo -e "${GREEN}🔐 GCP Secret Manager Setup for Arctic Map${NC}"
 echo -e "${GREEN}==================================================================${NC}"
 echo ""
 
@@ -95,7 +95,7 @@ fi
 echo ""
 
 # Grant Cloud Run service account access to secrets
-SERVICE_ACCOUNT="community-arctic-map-sa@${PROJECT_ID}.iam.gserviceaccount.com"
+SERVICE_ACCOUNT="arctic-map-sa@${PROJECT_ID}.iam.gserviceaccount.com"
 echo -e "${GREEN}🔐 Granting Cloud Run service account access to secrets...${NC}"
 
 SECRETS=("GOOGLE_SHEET_ID" "GOOGLE_SHEET_GID")
@@ -126,7 +126,7 @@ echo "1. Update your Cloud Run deployment to use these secrets"
 echo "2. Test the deployment to ensure secrets are accessible"
 echo ""
 echo -e "${YELLOW}💡 To update Cloud Run with secrets, run:${NC}"
-echo "   gcloud run services update community-arctic-map \\"
+echo "   gcloud run services update arctic-map \\"
 echo "     --region=us-east1 \\"
 echo "     --update-secrets=GOOGLE_SHEET_ID=GOOGLE_SHEET_ID:latest,GOOGLE_SHEET_GID=GOOGLE_SHEET_GID:latest"
 echo ""

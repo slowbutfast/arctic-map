@@ -1,4 +1,4 @@
-# GitHub Actions Workflow for Deploying Community Arctic Map to Google Cloud Run
+# GitHub Actions Workflow for Deploying Arctic Map to Google Cloud Run
 name: 🚀 Deploy to Google Cloud Run
 
 on: workflow_dispatch
@@ -15,8 +15,8 @@ env:
   GCP_REGION: us-east1
   REGISTRY_URL: us-east1-docker.pkg.dev
   ARTIFACT_REGISTRY_REPO: arctic-map-repo
-  SERVICE_NAME: community-arctic-map
-  IMAGE_NAME: community-arctic-map
+  SERVICE_NAME: arctic-map
+  IMAGE_NAME: arctic-map
 
 jobs:
   # =============================================================================
@@ -166,7 +166,7 @@ jobs:
               --max-instances=1
               --clear-volumes
               --clear-volume-mounts
-              --add-volume=name=database,type=cloud-storage,bucket=${{ env.GCP_PROJECT_ID }}-community-arctic-map-data
+              --add-volume=name=database,type=cloud-storage,bucket=${{ env.GCP_PROJECT_ID }}-arctic-map-data
               --add-volume-mount=volume=database,mount-path=/app/database
 
       - name: 🔍 Get service URL
@@ -221,7 +221,7 @@ jobs:
           echo "### 📋 Next Steps" >> $GITHUB_STEP_SUMMARY
           echo "1. Visit the service URL to verify the deployment" >> $GITHUB_STEP_SUMMARY
           echo "2. Ensure cpad.sqlite is uploaded to Cloud Storage bucket" >> $GITHUB_STEP_SUMMARY
-          echo "   \`gsutil cp backend/cpad.sqlite gs://${{ env.GCP_PROJECT_ID }}-community-arctic-map-data/cpad.sqlite\`" >> $GITHUB_STEP_SUMMARY
+          echo "   \`gsutil cp backend/cpad.sqlite gs://${{ env.GCP_PROJECT_ID }}-arctic-map-data/cpad.sqlite\`" >> $GITHUB_STEP_SUMMARY
 
   # =============================================================================
   # Phase 3: TEARDOWN - Cleanup and rollback if needed

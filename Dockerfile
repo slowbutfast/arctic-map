@@ -1,4 +1,4 @@
-# Multi-stage Dockerfile for Community Arctic Map
+# Multi-stage Dockerfile for Arctic Map
 # This Dockerfile builds both the frontend and backend services
 
 # =============================================================================

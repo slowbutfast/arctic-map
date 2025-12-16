@@ -1,6 +1,6 @@
-# 🚀 Deployment Guide for Community Arctic Map
+# 🚀 Deployment Guide for Arctic Map
 
-Complete guide for deploying the Community Arctic Map application to Google Cloud Run.
+Complete guide for deploying the Arctic Map application to Google Cloud Run.
 
 ## 📋 Table of Contents
 
@@ -84,8 +84,8 @@ export GOOGLE_SHEET_GID="your_google_sheet_gid"
 
 ```bash
 # 1. Clone repository
-git clone https://github.com/brown-ccv/community-arctic-map.git
-cd community-arctic-map
+git clone https://github.com/brown-ccv/arctic-map.git
+cd arctic-map
 
 # 2. Set your GCP project
 export GCP_PROJECT_ID="your-project-id"
@@ -94,7 +94,7 @@ export GCP_PROJECT_ID="your-project-id"
 ./.deployment/scripts/gcp/setup-service-account.sh
 
 # 4. Upload database to Cloud Storage
-gsutil cp backend/cpad.sqlite gs://${GCP_PROJECT_ID}-community-arctic-map-data/cpad.sqlite
+gsutil cp backend/cpad.sqlite gs://${GCP_PROJECT_ID}-arctic-map-data/cpad.sqlite
 
 # 5. Configure GitHub secrets (interactive script)
 ./.deployment/scripts/github/setup-github-secrets.sh
@@ -116,7 +116,7 @@ gh workflow run deploy.yml --ref main
 export GCP_PROJECT_ID="your-project-id"
 
 # Create project
-gcloud projects create $GCP_PROJECT_ID --name="Community Arctic Map"
+gcloud projects create $GCP_PROJECT_ID --name="Arctic Map"
 
 # Set as default
 gcloud config set project $GCP_PROJECT_ID
@@ -139,8 +139,8 @@ gcloud services enable \
 
 ```bash
 # Create service account
-gcloud iam service-accounts create community-arctic-map-sa \
-  --display-name="Community Arctic Map Service Account"
+gcloud iam service-accounts create arctic-map-sa \
+  --display-name="Arctic Map Service Account"
 
 # Grant required roles
 for role in \
@@ -149,13 +149,13 @@ for role in \
   roles/artifactregistry.writer \
   roles/iam.serviceAccountUser; do
   gcloud projects add-iam-policy-binding $GCP_PROJECT_ID \
-    --member="serviceAccount:community-arctic-map-sa@${GCP_PROJECT_ID}.iam.gserviceaccount.com" \
+    --member="serviceAccount:arctic-map-sa@${GCP_PROJECT_ID}.iam.gserviceaccount.com" \
     --role="$role"
 done
 
 # Create and download key
 gcloud iam service-accounts keys create service-account-key.json \
-  --iam-account=community-arctic-map-sa@${GCP_PROJECT_ID}.iam.gserviceaccount.com
+  --iam-account=arctic-map-sa@${GCP_PROJECT_ID}.iam.gserviceaccount.com
 ```
 
 #### 4. Create Artifact Registry Repository
@@ -164,29 +164,29 @@ gcloud iam service-accounts keys create service-account-key.json \
 gcloud artifacts repositories create arctic-map-repo \
   --repository-format=docker \
   --location=us-east1 \
-  --description="Docker repository for Community Arctic Map"
+  --description="Docker repository for Arctic Map"
 ```
 
 #### 5. Create Cloud Storage Bucket
 
 ```bash
 # Create bucket
-gsutil mb -l us-east1 gs://${GCP_PROJECT_ID}-community-arctic-map-data
+gsutil mb -l us-east1 gs://${GCP_PROJECT_ID}-arctic-map-data
 
 # Set permissions
 gsutil iam ch \
-  serviceAccount:community-arctic-map-sa@${GCP_PROJECT_ID}.iam.gserviceaccount.com:objectViewer \
-  gs://${GCP_PROJECT_ID}-community-arctic-map-data
+  serviceAccount:arctic-map-sa@${GCP_PROJECT_ID}.iam.gserviceaccount.com:objectViewer \
+  gs://${GCP_PROJECT_ID}-arctic-map-data
 ```
 
 ### Phase 2: Database Upload
 
 ```bash
 # Upload database file (4.3 GB - may take several minutes)
-gsutil cp backend/cpad.sqlite gs://${GCP_PROJECT_ID}-community-arctic-map-data/cpad.sqlite
+gsutil cp backend/cpad.sqlite gs://${GCP_PROJECT_ID}-arctic-map-data/cpad.sqlite
 
 # Verify upload
-gsutil ls -lh gs://${GCP_PROJECT_ID}-community-arctic-map-data/
+gsutil ls -lh gs://${GCP_PROJECT_ID}-arctic-map-data/
 ```
 
 ### Phase 3: GitHub Secrets Configuration
@@ -257,7 +257,7 @@ The deployment workflow (`.github/workflows/deploy.yml`) performs:
 ### Get Service URL
 
 ```bash
-gcloud run services describe community-arctic-map \
+gcloud run services describe arctic-map \
   --region=us-east1 \
   --format='value(status.url)'
 ```
@@ -273,7 +273,7 @@ docker build \
   --build-arg VITE_MAPBOX_ACCESS_TOKEN=$VITE_MAPBOX_ACCESS_TOKEN \
   --build-arg GOOGLE_SHEET_ID=$GOOGLE_SHEET_ID \
   --build-arg GOOGLE_SHEET_GID=$GOOGLE_SHEET_GID \
-  -t community-arctic-map:local \
+  -t arctic-map:local \
   .
 ```
 
@@ -282,21 +282,21 @@ docker build \
 ```bash
 # Run with database mounted
 docker run -d \
-  --name community-arctic-map \
+  --name arctic-map \
   -p 8000:8000 \
   -v "$(pwd)/backend/cpad.sqlite:/app/database/cpad.sqlite:ro" \
   -e GOOGLE_SHEET_ID=$GOOGLE_SHEET_ID \
   -e GOOGLE_SHEET_GID=$GOOGLE_SHEET_GID \
-  community-arctic-map:local
+  arctic-map:local
 
 # Test
 curl http://localhost:8000/api/layer_hierarchy
 
 # View logs
-docker logs -f community-arctic-map
+docker logs -f arctic-map
 
 # Stop
-docker stop community-arctic-map && docker rm community-arctic-map
+docker stop arctic-map && docker rm arctic-map
 ```
 
 ### Push to Artifact Registry
@@ -306,26 +306,26 @@ docker stop community-arctic-map && docker rm community-arctic-map
 gcloud auth configure-docker us-east1-docker.pkg.dev
 
 # Tag image
-docker tag community-arctic-map:local \
-  us-east1-docker.pkg.dev/${GCP_PROJECT_ID}/arctic-map-repo/community-arctic-map:latest
+docker tag arctic-map:local \
+  us-east1-docker.pkg.dev/${GCP_PROJECT_ID}/arctic-map-repo/arctic-map:latest
 
 # Push
-docker push us-east1-docker.pkg.dev/${GCP_PROJECT_ID}/arctic-map-repo/community-arctic-map:latest
+docker push us-east1-docker.pkg.dev/${GCP_PROJECT_ID}/arctic-map-repo/arctic-map:latest
 ```
 
 ### Deploy to Cloud Run
 
 ```bash
-gcloud run deploy community-arctic-map \
-  --image=us-east1-docker.pkg.dev/${GCP_PROJECT_ID}/arctic-map-repo/community-arctic-map:latest \
+gcloud run deploy arctic-map \
+  --image=us-east1-docker.pkg.dev/${GCP_PROJECT_ID}/arctic-map-repo/arctic-map:latest \
   --region=us-east1 \
   --platform=managed \
   --allow-unauthenticated \
-  --service-account=community-arctic-map-sa@${GCP_PROJECT_ID}.iam.gserviceaccount.com \
+  --service-account=arctic-map-sa@${GCP_PROJECT_ID}.iam.gserviceaccount.com \
   --cpu=2 \
   --memory=2Gi \
   --timeout=300 \
-  --add-volume=name=database,type=cloud-storage,bucket=${GCP_PROJECT_ID}-community-arctic-map-data \
+  --add-volume=name=database,type=cloud-storage,bucket=${GCP_PROJECT_ID}-arctic-map-data \
   --add-volume-mount=volume=database,mount-path=/app/database \
   --set-env-vars=GOOGLE_SHEET_ID=$GOOGLE_SHEET_ID,GOOGLE_SHEET_GID=$GOOGLE_SHEET_GID
 ```
@@ -347,10 +347,10 @@ No configuration needed - it just works!
 
 ```bash
 # Upload new version
-gsutil cp backend/cpad.sqlite gs://${GCP_PROJECT_ID}-community-arctic-map-data/cpad.sqlite
+gsutil cp backend/cpad.sqlite gs://${GCP_PROJECT_ID}-arctic-map-data/cpad.sqlite
 
 # Force Cloud Run to use new version (restart service)
-gcloud run services update community-arctic-map \
+gcloud run services update arctic-map \
   --region=us-east1 \
   --update-env-vars=DB_UPDATED=$(date +%s)
 ```
@@ -358,7 +358,7 @@ gcloud run services update community-arctic-map \
 ### Download Production Database
 
 ```bash
-gsutil cp gs://${GCP_PROJECT_ID}-community-arctic-map-data/cpad.sqlite ./backend/cpad.sqlite
+gsutil cp gs://${GCP_PROJECT_ID}-arctic-map-data/cpad.sqlite ./backend/cpad.sqlite
 ```
 
 ---
@@ -369,13 +369,13 @@ gsutil cp gs://${GCP_PROJECT_ID}-community-arctic-map-data/cpad.sqlite ./backend
 
 ```bash
 # Service info
-gcloud run services describe community-arctic-map --region=us-east1
+gcloud run services describe arctic-map --region=us-east1
 
 # View logs
-gcloud logging read "resource.type=cloud_run_revision AND resource.labels.service_name=community-arctic-map" --limit=50 --format=json
+gcloud logging read "resource.type=cloud_run_revision AND resource.labels.service_name=arctic-map" --limit=50 --format=json
 
 # Stream logs
-gcloud alpha run services logs tail community-arctic-map --region=us-east1
+gcloud alpha run services logs tail arctic-map --region=us-east1
 ```
 
 ### Common Issues
@@ -384,10 +384,10 @@ gcloud alpha run services logs tail community-arctic-map --region=us-east1
 
 ```bash
 # Check if database exists in bucket
-gsutil ls -lh gs://${GCP_PROJECT_ID}-community-arctic-map-data/
+gsutil ls -lh gs://${GCP_PROJECT_ID}-arctic-map-data/
 
 # Check volume mount
-gcloud run services describe community-arctic-map --region=us-east1 --format="value(spec.template.spec.volumes)"
+gcloud run services describe arctic-map --region=us-east1 --format="value(spec.template.spec.volumes)"
 ```
 
 **Solution:** Ensure database is uploaded and volume is properly mounted.
@@ -396,7 +396,7 @@ gcloud run services describe community-arctic-map --region=us-east1 --format="va
 
 ```bash
 # Check environment variables
-gcloud run services describe community-arctic-map --region=us-east1 --format="value(spec.template.spec.containers[0].env)"
+gcloud run services describe arctic-map --region=us-east1 --format="value(spec.template.spec.containers[0].env)"
 ```
 
 **Solution:** Update GitHub secrets and redeploy:
@@ -410,7 +410,7 @@ gh workflow run deploy.yml --ref main
 
 ```bash
 # View recent logs
-gcloud logging read "resource.type=cloud_run_revision AND resource.labels.service_name=community-arctic-map AND severity>=ERROR" --limit=20
+gcloud logging read "resource.type=cloud_run_revision AND resource.labels.service_name=arctic-map AND severity>=ERROR" --limit=20
 ```
 
 **Solution:** Check build logs in GitHub Actions for errors.
@@ -428,7 +428,7 @@ The application uses:
 
 ```bash
 # Get service URL
-URL=$(gcloud run services describe community-arctic-map --region=us-east1 --format='value(status.url)')
+URL=$(gcloud run services describe arctic-map --region=us-east1 --format='value(status.url)')
 
 # Test endpoints
 curl $URL/api/layer_hierarchy
@@ -439,7 +439,7 @@ curl $URL/api/geojson/a_alaska_schools
 
 ```bash
 # List all env vars
-gcloud run services describe community-arctic-map \
+gcloud run services describe arctic-map \
   --region=us-east1 \
   --format="table(spec.template.spec.containers[0].env[])"
 ```
@@ -452,16 +452,16 @@ To remove all resources:
 
 ```bash
 # Delete Cloud Run service
-gcloud run services delete community-arctic-map --region=us-east1 --quiet
+gcloud run services delete arctic-map --region=us-east1 --quiet
 
 # Delete Artifact Registry repository
 gcloud artifacts repositories delete arctic-map-repo --location=us-east1 --quiet
 
 # Delete Cloud Storage bucket
-gsutil rm -r gs://${GCP_PROJECT_ID}-community-arctic-map-data
+gsutil rm -r gs://${GCP_PROJECT_ID}-arctic-map-data
 
 # Delete service account
-gcloud iam service-accounts delete community-arctic-map-sa@${GCP_PROJECT_ID}.iam.gserviceaccount.com --quiet
+gcloud iam service-accounts delete arctic-map-sa@${GCP_PROJECT_ID}.iam.gserviceaccount.com --quiet
 
 # (Optional) Delete project
 gcloud projects delete $GCP_PROJECT_ID --quiet

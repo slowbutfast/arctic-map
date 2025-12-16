@@ -11,7 +11,7 @@ YELLOW='\033[1;33m'
 NC='\033[0m' # No Color
 
 echo -e "${GREEN}==================================================================${NC}"
-echo -e "${GREEN}🔐 GitHub Secrets Setup for Community Arctic Map${NC}"
+echo -e "${GREEN}🔐 GitHub Secrets Setup for Arctic Map${NC}"
 echo -e "${GREEN}==================================================================${NC}"
 echo ""
 
@@ -118,7 +118,7 @@ echo ""
 # Required secrets
 echo -e "${GREEN}--- Required Secrets (CI/CD) ---${NC}"
 set_secret "GCP_PROJECT_ID" "Your Google Cloud Project ID" "true" "" ""
-set_secret_from_file "GCP_SERVICE_ACCOUNT_KEY" "Service account key JSON file" "./community-arctic-map-sa-key.json"
+set_secret_from_file "GCP_SERVICE_ACCOUNT_KEY" "Service account key JSON file" "./arctic-map-sa-key.json"
 
 # Application secrets (runtime)
 echo -e "${GREEN}--- Application Secrets (Runtime) ---${NC}"
