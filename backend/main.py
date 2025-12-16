@@ -33,7 +33,24 @@ app.add_middleware(
     allow_headers=["*"],
 )
 
-DB_PATH = "/app/database/cpad.sqlite"
+# Automatically determine DB_PATH based on environment
+def get_db_path():
+    """
+    Automatically determine the correct database path:
+    1. Check if running in Docker (/app/database/cpad.sqlite)
+    2. Fall back to local development path (relative to this file)
+    """
+    # Check for database in Docker /app/database directory
+    docker_path = "/app/database/cpad.sqlite"
+    if os.path.exists(docker_path):
+        return docker_path
+    
+    # Default to local path relative to this file
+    local_path = os.path.join(os.path.dirname(__file__), "cpad.sqlite")
+    return local_path
+
+DB_PATH = get_db_path()
+print(f"[INFO] Using database at: {DB_PATH}")
 
 def get_available_layers():
     try:

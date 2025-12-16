@@ -2,14 +2,13 @@
  * Centralized API configuration
  * 
  * This module provides the base API URL that adapts to the environment:
- * - Development: Uses localhost:8000 (separate backend server)
- * - Production: Uses relative URLs (same origin as frontend)
+ * - Development (Vite on port 5173): Uses localhost:8000 (separate backend server)
+ * - Production/Docker (served on port 8000): Uses relative URLs (same origin)
  */
 
-// Detect environment based on hostname
-// In development: Use localhost:8000
-// In production: Use relative URLs (empty string)
-const isDevelopment = window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1';
+// Detect environment based on port
+// Vite dev server runs on port 5173, so if we're on 5173, we're in development
+const isDevelopment = window.location.port === '5173';
 const API_BASE_URL = isDevelopment ? 'http://localhost:8000' : '';
 
 /**

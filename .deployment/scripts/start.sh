@@ -48,8 +48,8 @@ uvicorn zip_downloads:app --host 0.0.0.0 --port 8001 &
 ZIP_PID=$!
 echo "[INFO] zip_downloads service started (PID: $ZIP_PID)"
 
-# Start main service with production config on PORT (provided by Cloud Run) or default 8080
-PORT=${PORT:-8080}
+# Start main service with production config on PORT (provided by Cloud Run) or default 8000
+PORT=${PORT:-8000}
 echo "[INFO] Starting main service on port $PORT..."
 exec uvicorn production:app --host 0.0.0.0 --port $PORT
 

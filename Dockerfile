@@ -57,6 +57,9 @@ RUN pip install --no-cache-dir -r requirements.txt
 # Copy backend application code
 COPY backend/ ./backend/
 
+# Create database directory for mounting at runtime
+RUN mkdir -p /app/database
+
 # Copy built frontend from builder stage
 COPY --from=frontend-builder /app/frontend/dist ./frontend/dist
 
@@ -64,14 +67,11 @@ COPY --from=frontend-builder /app/frontend/dist ./frontend/dist
 COPY .deployment/scripts/start.sh /app/start.sh
 RUN chmod +x /app/start.sh
 
-# GCS volume will be mounted at /app/backend at runtime
-# No need to create backend directory or download database
-
 # Install additional dependencies for serving static files
 RUN pip install --no-cache-dir aiofiles
 
 # Expose port (Cloud Run will set the PORT environment variable)
-EXPOSE 8080 8000 8001
+EXPOSE 8000 8001
 
 # Set working directory to backend
 WORKDIR /app/backend
