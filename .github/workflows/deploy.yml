@@ -27,15 +27,12 @@ permissions:
 
 # Environment variables used across all jobs
 env:
-  GCP_REGION: us-east1-docker.pkg.dev
-  region: us-east1
+  GCP_PROJECT_ID: salap-ayca-artic-map
+  GCP_REGION: us-east1
+  REGISTRY_URL: us-east1-docker.pkg.dev
   ARTIFACT_REGISTRY_REPO: arctic-map-repo
   SERVICE_NAME: community-arctic-map
-  gcp_project_id: salap-ayca-artic-map
-  gcp_registry_url: us-east1-docker.pkg.dev
-  gcp_container_registry: arctic-map-repo
-  image: community-arctic-map
-  
+  IMAGE_NAME: community-arctic-map
 
 jobs:
   # =============================================================================
@@ -94,7 +91,7 @@ jobs:
       - name: 📊 Setup deployment metadata
         id: setup
         run: |
-          echo "project_id=${{ env.gcp_project_id }}" >> $GITHUB_OUTPUT
+          echo "project_id=${{ env.GCP_PROJECT_ID }}" >> $GITHUB_OUTPUT
           echo "image_tag=${GITHUB_SHA::7}" >> $GITHUB_OUTPUT
           echo "✅ Prepare phase completed successfully"
 
@@ -102,8 +99,8 @@ jobs:
         run: |
           echo "Checking required secrets..."
           
-          if [ -z "${{ env.gcp_project_id }}" ]; then
-            echo "❌ gcp_project_id secret is missing"
+          if [ -z "${{ env.GCP_PROJECT_ID }}" ]; then
+            echo "❌ GCP_PROJECT_ID secret is missing"
             exit 1
           fi
           
@@ -144,7 +141,7 @@ jobs:
       - name: 🔧 Setup Cloud SDK
         uses: google-github-actions/setup-gcloud@v2
         with:
-          project_id: ${{ env.gcp_project_id }}
+          project_id: ${{ env.GCP_PROJECT_ID }}
 
       - uses: docker/login-action@v3
         with:
@@ -160,7 +157,7 @@ jobs:
       - uses: docker/build-push-action@v6
         with:
           push: true
-          tags: ${{ env.gcp_registry_url }}/${{ env.gcp_project_id }}/${{ env.gcp_container_registry }}/${{ env.image }}:latest
+          tags: ${{ env.REGISTRY_URL }}/${{ env.GCP_PROJECT_ID }}/${{ env.ARTIFACT_REGISTRY_REPO }}/${{ env.IMAGE_NAME }}:latest
           build-args: |
             VITE_MAPBOX_ACCESS_TOKEN=${{ secrets.VITE_MAPBOX_ACCESS_TOKEN }}
 
@@ -168,30 +165,30 @@ jobs:
         uses: 'google-github-actions/deploy-cloudrun@v2'
         id: "deploy"
         with:
-          service: ${{ env.image }}
-          region: ${{ env.region }}
-          project_id: ${{ env.gcp_project_id }}
-          image: ${{ env.gcp_registry_url }}/${{ env.gcp_project_id }}/${{ env.gcp_container_registry }}/${{ env.image }}:latest
+          service: ${{ env.IMAGE_NAME }}
+          region: ${{ env.GCP_REGION }}
+          project_id: ${{ env.GCP_PROJECT_ID }}
+          image: ${{ env.REGISTRY_URL }}/${{ env.GCP_PROJECT_ID }}/${{ env.ARTIFACT_REGISTRY_REPO }}/${{ env.IMAGE_NAME }}:latest
           env_vars: |-
             GOOGLE_SHEET_ID=${{ secrets.GOOGLE_SHEET_ID }}
             GOOGLE_SHEET_GID=${{ secrets.GOOGLE_SHEET_GID }}
           flags: >-
               --allow-unauthenticated
-              --service-account=${{ env.SERVICE_NAME }}-sa@${{ env.gcp_project_id }}.iam.gserviceaccount.com
+              --service-account=${{ env.SERVICE_NAME }}-sa@${{ env.GCP_PROJECT_ID }}.iam.gserviceaccount.com
               --timeout=300
               --cpu-boost
               --cpu=2
               --memory=2Gi
               --clear-volumes
               --clear-volume-mounts
-              --add-volume=name=database,type=cloud-storage,bucket=${{ env.gcp_project_id }}-community-arctic-map-data
+              --add-volume=name=database,type=cloud-storage,bucket=${{ env.GCP_PROJECT_ID }}-community-arctic-map-data
               --add-volume-mount=volume=database,mount-path=/app/database
 
       - name: 🔍 Get service URL
         id: get-url
         run: |
           SERVICE_URL=$(gcloud run services describe ${{ env.SERVICE_NAME }} \
-            --region=${{ env.region }} \
+            --region=${{ env.GCP_REGION }} \
             --format='value(status.url)')
           echo "service_url=$SERVICE_URL" >> $GITHUB_OUTPUT
           echo "🌐 Service URL: $SERVICE_URL"
@@ -224,7 +221,7 @@ jobs:
           
           if [ "$SUCCESS" = false ]; then
             echo "❌ Service failed to respond after $MAX_RETRIES attempts"
-            echo "Please check the logs: gcloud run logs read ${{ env.SERVICE_NAME }} --region=${{ env.region }}"
+            echo "Please check the logs: gcloud run logs read ${{ env.SERVICE_NAME }} --region=${{ env.GCP_REGION }}"
             exit 1
           fi
 
@@ -240,7 +237,7 @@ jobs:
           echo "### 📋 Next Steps" >> $GITHUB_STEP_SUMMARY
           echo "1. Visit the service URL to verify the deployment" >> $GITHUB_STEP_SUMMARY
           echo "2. Ensure cpad.sqlite is uploaded to Cloud Storage bucket" >> $GITHUB_STEP_SUMMARY
-          echo "   \`gsutil cp backend/cpad.sqlite gs://${{ env.gcp_project_id }}-community-arctic-map-data/cpad.sqlite\`" >> $GITHUB_STEP_SUMMARY
+          echo "   \`gsutil cp backend/cpad.sqlite gs://${{ env.GCP_PROJECT_ID }}-community-arctic-map-data/cpad.sqlite\`" >> $GITHUB_STEP_SUMMARY
 
   # =============================================================================
   # Phase 3: TEARDOWN - Cleanup and rollback if needed
@@ -274,11 +271,11 @@ jobs:
         if: needs.deploy.result == 'failure'
         uses: google-github-actions/setup-gcloud@v2
         with:
-          project_id: ${{ env.gcp_project_id }}
+          project_id: ${{ env.GCP_PROJECT_ID }}
 
       - name: 🔄 Rollback on failure (optional)
         if: needs.deploy.result == 'failure'
         run: |
           echo "⚠️ Deployment failed. Consider manual rollback if needed."
           echo "To rollback, run:"
-          echo "gcloud run services update-traffic ${{ env.SERVICE_NAME }} --to-revisions=PREVIOUS_REVISION=100 --region=${{ env.region }}"
+          echo "gcloud run services update-traffic ${{ env.SERVICE_NAME }} --to-revisions=PREVIOUS_REVISION=100 --region=${{ env.GCP_REGION }}"
