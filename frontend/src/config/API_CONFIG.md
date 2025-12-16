@@ -16,9 +16,9 @@ The application uses a centralized API configuration system that automatically a
 
 ### How It Works
 
-The system automatically detects the environment based on the browser's hostname:
-- **Localhost** (`localhost` or `127.0.0.1`): Uses `http://localhost:8000`
-- **Production** (any other hostname): Uses relative URLs (empty string)
+The system automatically detects the environment based on the browser's port:
+- **Development** (when `window.location.port` is `'5173'`): Uses `http://localhost:8000`
+- **Production** (any other port): Uses relative URLs (empty string)
 
 ## Usage
 
