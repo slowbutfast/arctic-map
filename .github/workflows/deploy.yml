@@ -1,23 +1,7 @@
 # GitHub Actions Workflow for Deploying Community Arctic Map to Google Cloud Run
 name: 🚀 Deploy to Google Cloud Run
 
-on:
-  # Manual trigger with environment selection
-  workflow_dispatch:
-    inputs:
-      environment:
-        description: 'Deployment environment'
-        required: true
-        type: choice
-        options:
-          - production
-          - staging
-        default: 'staging'
-      skip_tests:
-        description: 'Skip validation tests'
-        required: false
-        type: boolean
-        default: false
+on: workflow_dispatch
 
 # Permissions needed for the workflow
 permissions:
@@ -68,21 +52,18 @@ jobs:
           cache-dependency-path: backend/requirements.txt
 
       - name: 📦 Install backend dependencies
-        if: ${{ !inputs.skip_tests }}
         run: |
           cd backend
           pip install -r requirements.txt
         timeout-minutes: 5
 
       - name: 📦 Install frontend dependencies
-        if: ${{ !inputs.skip_tests }}
         run: |
           cd frontend
           npm ci
         timeout-minutes: 5
 
       - name: 🧪 Lint frontend code
-        if: ${{ !inputs.skip_tests }}
         run: |
           cd frontend
           npm run lint || echo "⚠️ Linting warnings detected"
@@ -127,7 +108,6 @@ jobs:
     runs-on: ubuntu-latest
     needs: prepare
     timeout-minutes: 30
-    environment: ${{ inputs.environment || 'staging' }}
     
     steps:
       - name: 📥 Checkout repository
@@ -230,7 +210,6 @@ jobs:
         run: |
           echo "## 🚀 Deployment Summary" >> $GITHUB_STEP_SUMMARY
           echo "" >> $GITHUB_STEP_SUMMARY
-          echo "**Environment:** ${{ inputs.environment || 'staging' }}" >> $GITHUB_STEP_SUMMARY
           echo "**Image Tag:** ${{ needs.prepare.outputs.image_tag }}" >> $GITHUB_STEP_SUMMARY
           echo "**Service URL:** ${{ steps.get-url.outputs.service_url }}" >> $GITHUB_STEP_SUMMARY
           echo "" >> $GITHUB_STEP_SUMMARY
