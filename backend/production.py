@@ -11,6 +11,11 @@ import sys
 sys.path.insert(0, os.path.dirname(__file__))
 from main import app as main_app
 
+# Add a health check endpoint for Cloud Run
+@main_app.get("/health")
+async def health_check():
+    return {"status": "healthy"}
+
 # Check if running in production (frontend dist files exist)
 FRONTEND_DIST = os.path.join(os.path.dirname(__file__), "..", "frontend", "dist")
 IS_PRODUCTION = os.path.exists(FRONTEND_DIST)

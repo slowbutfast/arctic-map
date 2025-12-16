@@ -54,6 +54,8 @@ Create a `.env` file in the `frontend/` directory with the following content:
 VITE_MAPBOX_ACCESS_TOKEN=pk.your_mapbox_token_here
 ```
 
+**Note:** In production, the Mapbox token is provided as a Docker build argument. The `.env` file is only used for local development.
+
 You can obtain a Mapbox public access token from:  
 [https://account.mapbox.com/access-tokens](https://account.mapbox.com/access-tokens)
 

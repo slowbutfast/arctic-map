@@ -11,7 +11,7 @@ YELLOW='\033[1;33m'
 NC='\033[0m' # No Color
 
 echo -e "${GREEN}==================================================================${NC}"
-echo -e "${GREEN}🌍 GitHub Environments Setup for Community Arctic Map${NC}"
+echo -e "${GREEN}🌍 GitHub Environments Setup for Arctic Map${NC}"
 echo -e "${GREEN}==================================================================${NC}"
 echo ""
 

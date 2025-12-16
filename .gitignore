@@ -7,6 +7,13 @@ backend/bundled_zips/
 backend/venv/
 venv/
 
+# Python cache
+__pycache__/
+*.pyc
+*.pyo
+*.pyd
+.Python
+
 # Ignore environment variables
 backend/.env
 frontend/.env
@@ -30,3 +37,6 @@ deploy.log
 # Frontend build output
 frontend/dist/
 dist/
+
+# Env
+.env

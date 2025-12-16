@@ -75,10 +75,6 @@ check_secret "GOOGLE_SHEET_GID" "true"
 check_secret "VITE_MAPBOX_ACCESS_TOKEN" "true"
 
 echo ""
-echo -e "${YELLOW}Optional Secrets:${NC}"
-check_secret "SLACK_WEBHOOK_URL" "false"
-
-echo ""
 
 # Check workflow file
 echo -e "${YELLOW}🔍 Checking GitHub Actions workflow...${NC}"

@@ -1,33 +1,32 @@
-# Multi-stage Dockerfile for Community Arctic Map
+# Multi-stage Dockerfile for Arctic Map
 # This Dockerfile builds both the frontend and backend services
 
 # =============================================================================
 # Stage 1: Build Frontend (React + Vite)
 # =============================================================================
-FROM node:20-alpine AS frontend-builder
+FROM node:20.18-alpine AS frontend-builder
 
 WORKDIR /app/frontend
 
+
 # Copy frontend package files
 COPY frontend/package*.json ./
+# COPY package.json yarn.lock* package-lock.json* pnpm-lock.yaml* .npmrc* ./
 
 # Install dependencies
-RUN npm ci --only=production
+RUN npm ci
 
 # Copy frontend source code
 COPY frontend/ ./
 
 # Build frontend for production
-# Note: Build-time environment variables must be provided during docker build
+# Note: Mapbox token is only used during build and not stored in final image
+# The token will be embedded in the compiled JavaScript bundle
 ARG VITE_MAPBOX_ACCESS_TOKEN
-ARG VITE_API_BASE_URL=/api
-ARG VITE_DOWNLOAD_API_URL=/api/download
 
-ENV VITE_MAPBOX_ACCESS_TOKEN=${VITE_MAPBOX_ACCESS_TOKEN}
-ENV VITE_API_BASE_URL=${VITE_API_BASE_URL}
-ENV VITE_DOWNLOAD_API_URL=${VITE_DOWNLOAD_API_URL}
-
-RUN npm run build
+# Use build args directly in RUN command to avoid persisting in ENV
+RUN VITE_MAPBOX_ACCESS_TOKEN=${VITE_MAPBOX_ACCESS_TOKEN} \
+    npm run build
 
 # =============================================================================
 # Stage 2: Production Runtime with FastAPI
@@ -37,6 +36,8 @@ FROM python:3.12-slim
 # Install system dependencies for geospatial libraries and Google Cloud SDK
 RUN apt-get update && apt-get install -y \
     libgdal-dev \
+    gdal-bin \
+    g++ \
     libgeos-dev \
     libproj-dev \
     curl \
@@ -56,23 +57,21 @@ RUN pip install --no-cache-dir -r requirements.txt
 # Copy backend application code
 COPY backend/ ./backend/
 
+# Create database directory for mounting at runtime
+RUN mkdir -p /app/database
+
 # Copy built frontend from builder stage
 COPY --from=frontend-builder /app/frontend/dist ./frontend/dist
 
-# Copy database download script and startup script
-COPY .deployment/scripts/download-database.sh /app/scripts/download-database.sh
+# Copy startup script
 COPY .deployment/scripts/start.sh /app/start.sh
-RUN chmod +x /app/scripts/download-database.sh /app/start.sh
-
-# Create directory for the SQLite database file
-# This will be populated by the download script at startup
-RUN mkdir -p /app/backend
+RUN chmod +x /app/start.sh
 
 # Install additional dependencies for serving static files
 RUN pip install --no-cache-dir aiofiles
 
 # Expose port (Cloud Run will set the PORT environment variable)
-EXPOSE 8080
+EXPOSE 8000 8001
 
 # Set working directory to backend
 WORKDIR /app/backend

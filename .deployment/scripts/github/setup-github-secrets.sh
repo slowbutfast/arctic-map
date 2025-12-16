@@ -11,7 +11,7 @@ YELLOW='\033[1;33m'
 NC='\033[0m' # No Color
 
 echo -e "${GREEN}==================================================================${NC}"
-echo -e "${GREEN}🔐 GitHub Secrets Setup for Community Arctic Map${NC}"
+echo -e "${GREEN}🔐 GitHub Secrets Setup for Arctic Map${NC}"
 echo -e "${GREEN}==================================================================${NC}"
 echo ""
 
@@ -118,17 +118,13 @@ echo ""
 # Required secrets
 echo -e "${GREEN}--- Required Secrets (CI/CD) ---${NC}"
 set_secret "GCP_PROJECT_ID" "Your Google Cloud Project ID" "true" "" ""
-set_secret_from_file "GCP_SERVICE_ACCOUNT_KEY" "Service account key JSON file" "./community-arctic-map-sa-key.json"
+set_secret_from_file "GCP_SERVICE_ACCOUNT_KEY" "Service account key JSON file" "./arctic-map-sa-key.json"
 
 # Application secrets (runtime)
 echo -e "${GREEN}--- Application Secrets (Runtime) ---${NC}"
 set_secret "GOOGLE_SHEET_ID" "Google Sheet ID for layer theme organization" "true" "" ""
 set_secret "GOOGLE_SHEET_GID" "Google Sheet GID (tab identifier)" "true" "^[0-9]{1,20}$" "GID must be 1-20 numeric digits"
 set_secret "VITE_MAPBOX_ACCESS_TOKEN" "Mapbox access token for frontend" "true" "^pk\.[a-zA-Z0-9._-]{50,}$" "Mapbox public token must start with 'pk.' followed by at least 50 characters"
-
-# Optional secrets
-echo -e "${GREEN}--- Optional Secrets ---${NC}"
-set_secret "SLACK_WEBHOOK_URL" "Slack webhook for deployment notifications" "false" "" ""
 
 # Summary
 echo -e "${GREEN}==================================================================${NC}"

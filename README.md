@@ -4,22 +4,27 @@ For full documentation and setup instructions, please visit the [Wiki](https://g
 
 ## 🚀 Deployment
 
-This repository is configured for deployment to Google Cloud Run. For complete deployment instructions, see:
+This application is deployed on **Google Cloud Run** with automated CI/CD via GitHub Actions.
 
-**[📖 Deployment Guide](.deployment/DEPLOYMENT.md)**
+**Production URL:** [https://arctic-map-519427003190.us-east1.run.app](https://arctic-map-519427003190.us-east1.run.app)
 
-### Quick Start
+### Quick Deploy
 
-1. **Prerequisites**: Google Cloud account, GitHub account, `gcloud` and `gh` CLI tools
-2. **Setup**: Run `.deployment/scripts/gcp/setup-service-account.sh`
-3. **Deploy**: Use GitHub Actions workflow or manual deployment
+```bash
+# 1. Set up GCP resources
+./.deployment/scripts/gcp/setup-service-account.sh
 
-The application includes:
-- React + Vite frontend
-- Python FastAPI backend (2 services)
-- SQLite database (4.3 GB) - requires separate upload to Cloud Storage
+# 2. Upload database to Cloud Storage
+gsutil cp backend/cpad.sqlite gs://${GCP_PROJECT_ID}-arctic-map-data/cpad.sqlite
 
-For detailed step-by-step instructions, see the [Deployment Guide](.deployment/DEPLOYMENT.md).
+# 3. Configure GitHub secrets (interactive)
+./.deployment/scripts/github/setup-github-secrets.sh
+
+# 4. Deploy
+gh workflow run deploy.yml --ref main
+```
+
+For complete deployment instructions, see the **[Deployment Guide](.deployment/DEPLOYMENT.md)**.
 
 ---
 
