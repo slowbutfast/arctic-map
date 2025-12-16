@@ -16,9 +16,11 @@ The application uses a centralized API configuration system that automatically a
 
 ### How It Works
 
-The system automatically detects the environment based on the browser's port:
+The system automatically detects the environment based on the frontend dev server port:
 - **Development** (when `window.location.port` is `'5173'`): Uses `http://localhost:8000`
-- **Production** (any other port): Uses relative URLs (empty string)
+- **Production** (any other port or no port): Uses relative URLs (empty string)
+
+This means the frontend knows it's in development mode only when running on Vite's dev server (port 5173).
 
 ## Usage
 
@@ -89,7 +91,7 @@ Production configuration is handled automatically:
 ```
 Frontend (localhost:5173)  →  Backend (localhost:8000)
      ↓
-Detects hostname = 'localhost'
+Detects port = '5173'
      ↓
 Uses absolute URL: http://localhost:8000/api/...
 ```
@@ -97,14 +99,14 @@ Uses absolute URL: http://localhost:8000/api/...
 ### Production Mode
 
 ```
-Browser → Cloud Run (port 8080)
+Browser → Cloud Run (port 8000)
                 ↓
         ┌───────┴────────┐
         ↓                ↓
    Frontend          Backend
    (/, /assets)      (/api/*)
         ↓
-Detects hostname ≠ 'localhost'
+Detects port ≠ '5173'
         ↓
 Uses relative URL: /api/...
 (Same origin, no CORS issues)
@@ -136,13 +138,14 @@ uvicorn main:app --reload --port 8000
 ```
 
 ### Issue: API calls fail in production
-**Solution**: The system auto-detects based on hostname. If you're testing on a custom domain locally, you may need to adjust the detection logic in `api.js`.
+**Solution**: The system auto-detects based on port 5173. If you're testing locally with Docker or another setup, ensure you're not running on port 5173 (which would trigger dev mode).
 
 ### Issue: API calls go to wrong URL
 **Solution**: Check the browser console to see what `API_BASE_URL` is being used:
 ```javascript
 import { API_BASE_URL } from './config/api';
 console.log('API Base URL:', API_BASE_URL);
+console.log('Current port:', window.location.port);
 ```
 
 ### Issue: CORS errors in development
