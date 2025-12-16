@@ -23,8 +23,6 @@ node_modules/
 .deployment/scripts/gcp/
 .deployment/scripts/github/
 .deployment/DEPLOYMENT.md
-.deployment/cloudbuild.yaml
-.deployment/cloudrun.yaml
 .github/
 README.md
 
