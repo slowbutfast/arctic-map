@@ -105,6 +105,16 @@ done
 echo -e "${GREEN}✅ IAM roles granted successfully${NC}"
 echo ""
 
+# Grant service account permission to act as itself
+echo -e "${GREEN}🔐 Granting service account self-impersonation permission...${NC}"
+gcloud iam service-accounts add-iam-policy-binding "$SERVICE_ACCOUNT_EMAIL" \
+    --member="serviceAccount:$SERVICE_ACCOUNT_EMAIL" \
+    --role="roles/iam.serviceAccountUser" \
+    --project="$PROJECT_ID" \
+    --quiet
+echo -e "${GREEN}✅ Service account self-impersonation granted${NC}"
+echo ""
+
 # Create Artifact Registry repository
 echo -e "${GREEN}📦 Creating Artifact Registry repository...${NC}"
 if gcloud artifacts repositories describe "$ARTIFACT_REGISTRY_REPO" \
