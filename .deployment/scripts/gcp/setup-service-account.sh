@@ -88,7 +88,7 @@ echo -e "${GREEN}🔐 Granting IAM roles to service account...${NC}"
 # Required roles for Cloud Run
 ROLES=(
     "roles/run.admin"
-    "roles/artifactregistry.reader"
+    "roles/artifactregistry.writer"
     "roles/secretmanager.secretAccessor"
     "roles/storage.objectViewer"
 )
