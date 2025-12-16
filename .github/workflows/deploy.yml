@@ -19,6 +19,12 @@ on:
         type: boolean
         default: false
 
+# Permissions needed for the workflow
+permissions:
+  contents: read
+  id-token: write
+  actions: read
+
 # Environment variables used across all jobs
 env:
   GCP_REGION: us-east1-docker.pkg.dev
