@@ -1,0 +1,36 @@
+# Exclude large database file - it will be mounted from GCS at runtime
+backend/cpad.sqlite
+
+# Exclude local environment files
+backend/.env
+backend/.env.local
+
+# Exclude Python cache
+**/__pycache__
+**/*.pyc
+**/*.pyo
+**/*.pyd
+.Python
+
+# Exclude node_modules (already handled by separate COPY in Dockerfile)
+node_modules/
+
+# Exclude git files
+.git/
+.gitignore
+
+# Exclude deployment scripts and docs (but keep start.sh)
+.deployment/scripts/gcp/
+.deployment/scripts/github/
+.deployment/DEPLOYMENT.md
+.deployment/cloudbuild.yaml
+.deployment/cloudrun.yaml
+.github/
+README.md
+
+# Exclude editor files
+.vscode/
+.idea/
+*.swp
+*.swo
+*~
