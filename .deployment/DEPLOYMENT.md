@@ -96,11 +96,8 @@ export GCP_PROJECT_ID="your-project-id"
 # 4. Upload database to Cloud Storage
 gsutil cp backend/cpad.sqlite gs://${GCP_PROJECT_ID}-community-arctic-map-data/cpad.sqlite
 
-# 5. Configure GitHub secrets
-gh secret set GCP_SERVICE_ACCOUNT_KEY < service-account-key.json
-gh secret set VITE_MAPBOX_ACCESS_TOKEN --body "your_mapbox_token"
-gh secret set GOOGLE_SHEET_ID --body "your_sheet_id"
-gh secret set GOOGLE_SHEET_GID --body "your_gid"
+# 5. Configure GitHub secrets (interactive script)
+./.deployment/scripts/github/setup-github-secrets.sh
 
 # 6. Deploy via GitHub Actions
 gh workflow run deploy.yml --ref main
@@ -193,6 +190,15 @@ gsutil ls -lh gs://${GCP_PROJECT_ID}-community-arctic-map-data/
 ```
 
 ### Phase 3: GitHub Secrets Configuration
+
+Use the automated setup script:
+
+```bash
+# Run GitHub secrets setup script (interactive)
+./.deployment/scripts/github/setup-github-secrets.sh
+```
+
+Or set manually:
 
 ```bash
 # Set service account key
