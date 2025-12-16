@@ -1,9 +1,9 @@
 #!/bin/bash
 # Startup script for Community Arctic Map on Cloud Run
 # This script:
-# 1. Downloads the database file from Cloud Storage if needed
+# 1. Verifies the database file is accessible from GCS mount
 # 2. Starts the zip_downloads service on port 8001
-# 3. Starts the main API service on the PORT provided by Cloud Run
+# 3. Starts the main API service on port 8000 (Cloud Run default)
 
 set -e
 
@@ -17,7 +17,7 @@ if [ -f /app/database/cpad.sqlite ]; then
     FILE_SIZE=$(du -h /app/database/cpad.sqlite | cut -f1)
     echo "[INFO] ✅ Database found (size: $FILE_SIZE)"
 else
-    echo "[ERROR] ❌ Database not found at /app/backend/cpad.sqlite"
+    echo "[ERROR] ❌ Database not found at /app/database/cpad.sqlite"
     echo "[ERROR] Please ensure cpad.sqlite is uploaded to the GCS bucket"
     echo "[ERROR] Upload with: gsutil cp backend/cpad.sqlite gs://\${GCP_PROJECT_ID}-community-arctic-map-data/cpad.sqlite"
 fi
