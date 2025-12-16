@@ -126,10 +126,6 @@ set_secret "GOOGLE_SHEET_ID" "Google Sheet ID for layer theme organization" "tru
 set_secret "GOOGLE_SHEET_GID" "Google Sheet GID (tab identifier)" "true" "^[0-9]{1,20}$" "GID must be 1-20 numeric digits"
 set_secret "VITE_MAPBOX_ACCESS_TOKEN" "Mapbox access token for frontend" "true" "^pk\.[a-zA-Z0-9._-]{50,}$" "Mapbox public token must start with 'pk.' followed by at least 50 characters"
 
-# Optional secrets
-echo -e "${GREEN}--- Optional Secrets ---${NC}"
-set_secret "SLACK_WEBHOOK_URL" "Slack webhook for deployment notifications" "false" "" ""
-
 # Summary
 echo -e "${GREEN}==================================================================${NC}"
 echo -e "${GREEN}✅ GitHub Secrets Setup Complete!${NC}"
