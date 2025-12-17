@@ -7,6 +7,13 @@ backend/bundled_zips/
 backend/venv/
 venv/
 
+# Python cache
+__pycache__/
+*.pyc
+*.pyo
+*.pyd
+.Python
+
 # Ignore environment variables
 backend/.env
 frontend/.env
@@ -17,3 +24,19 @@ dist/.DS_Store
 
 # Ignore project-specific metadata information
 backend/metadata.html
+
+# Deployment artifacts and secrets
+*.key.json
+*-sa-key.json
+.deployment/logs/
+*.log
+build.log
+docker-build.log
+deploy.log
+
+# Frontend build output
+frontend/dist/
+dist/
+
+# Env
+.env

@@ -1,0 +1,80 @@
+# Multi-stage Dockerfile for Arctic Map
+# This Dockerfile builds both the frontend and backend services
+
+# =============================================================================
+# Stage 1: Build Frontend (React + Vite)
+# =============================================================================
+FROM node:20.18-alpine AS frontend-builder
+
+WORKDIR /app/frontend
+
+
+# Copy frontend package files
+COPY frontend/package*.json ./
+# COPY package.json yarn.lock* package-lock.json* pnpm-lock.yaml* .npmrc* ./
+
+# Install dependencies
+RUN npm ci
+
+# Copy frontend source code
+COPY frontend/ ./
+
+# Build frontend for production
+# Note: Mapbox token is only used during build and not stored in final image
+# The token will be embedded in the compiled JavaScript bundle
+ARG VITE_MAPBOX_ACCESS_TOKEN
+
+# Use build args directly in RUN command to avoid persisting in ENV
+RUN VITE_MAPBOX_ACCESS_TOKEN=${VITE_MAPBOX_ACCESS_TOKEN} \
+    npm run build
+
+# =============================================================================
+# Stage 2: Production Runtime with FastAPI
+# =============================================================================
+FROM python:3.12-slim
+
+# Install system dependencies for geospatial libraries and Google Cloud SDK
+RUN apt-get update && apt-get install -y \
+    libgdal-dev \
+    gdal-bin \
+    g++ \
+    libgeos-dev \
+    libproj-dev \
+    curl \
+    gnupg \
+    ca-certificates \
+    && curl -fsSL https://packages.cloud.google.com/apt/doc/apt-key.gpg | gpg --dearmor -o /usr/share/keyrings/cloud.google.gpg \
+    && echo "deb [signed-by=/usr/share/keyrings/cloud.google.gpg] https://packages.cloud.google.com/apt cloud-sdk main" | tee -a /etc/apt/sources.list.d/google-cloud-sdk.list \
+    && apt-get update && apt-get install -y google-cloud-cli \
+    && rm -rf /var/lib/apt/lists/*
+
+WORKDIR /app
+
+# Copy Python requirements and install dependencies
+COPY backend/requirements.txt ./
+RUN pip install --no-cache-dir -r requirements.txt
+
+# Copy backend application code
+COPY backend/ ./backend/
+
+# Create database directory for mounting at runtime
+RUN mkdir -p /app/database
+
+# Copy built frontend from builder stage
+COPY --from=frontend-builder /app/frontend/dist ./frontend/dist
+
+# Copy startup script
+COPY .deployment/scripts/start.sh /app/start.sh
+RUN chmod +x /app/start.sh
+
+# Install additional dependencies for serving static files
+RUN pip install --no-cache-dir aiofiles
+
+# Expose port (Cloud Run will set the PORT environment variable)
+EXPOSE 8000 8001
+
+# Set working directory to backend
+WORKDIR /app/backend
+
+# Run the startup script
+CMD ["/app/start.sh"]

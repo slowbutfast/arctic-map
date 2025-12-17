@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from "react";
+import { getApiUrl } from "../config/api";
 import "../styles/Sidebar.css";
 import AttributeTable from "./AttributeTable";
 
@@ -25,7 +26,7 @@ const Sidebar = ({ onLayerToggle, isThematicMode, onThematicModeToggle, isSideba
   const [showAboutPopup, setShowAboutPopup] = useState(false);
 
   useEffect(() => {
-    fetch("http://localhost:8000/api/layer_hierarchy")
+    fetch(getApiUrl("/api/layer_hierarchy"))
       .then((res) => res.json())
       .then((data) => {
         const themeGroups = [];
@@ -92,7 +93,7 @@ const Sidebar = ({ onLayerToggle, isThematicMode, onThematicModeToggle, isSideba
 
   const handleViewAttributes = (layer) => {
     setLoadingAttributes(true);
-    fetch(`http://localhost:8000/api/geojson/${layer}`)
+    fetch(getApiUrl(`/api/geojson/${layer}`))
       .then((res) => res.json())
       .then((geojson) => {
 
