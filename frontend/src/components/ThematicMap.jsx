@@ -169,7 +169,7 @@ const ThematicMap = ({ mapboxMap, onThematicModeToggle }) => {
 
   const handleViewMetadata = () => {
     if (selectedAttributeId) {
-      window.open(`http://localhost:8000/api/metadata_html/${selectedAttributeId}`, "_blank");
+      window.open(getApiUrl(`/api/metadata_html/${selectedAttributeId}`, "_blank"));
     } else {
       console.warn("No attribute selected to view metadata.");
     }
