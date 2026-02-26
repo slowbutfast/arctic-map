@@ -240,7 +240,7 @@ const Sidebar = ({ onLayerToggle, isThematicMode, onThematicModeToggle, isSideba
                             <button onClick={() => handleViewAttributes(dataset.layer_name)}>
                               View Attributes
                             </button>
-                            <button onClick={() => setConfirmDownloadLayer(dataset.layer_name)}>
+                            <button onClick={() => window.open(getApiUrl(`/api/metadata_html/${dataset.layer_name}`, "_blank"))}>
                               Download
                             </button>
                             <button onClick={() => window.open(`http://localhost:8000/api/metadata_html/${dataset.layer_name}`, "_blank")}>

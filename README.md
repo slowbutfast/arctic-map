@@ -6,7 +6,7 @@ For full documentation and setup instructions, please visit the [Wiki](https://g
 
 This application is deployed on **Google Cloud Run** with automated CI/CD via GitHub Actions.
 
-**Production URL:** [https://arctic-map-519427003190.us-east1.run.app](https://arctic-map-519427003190.us-east1.run.app)
+**Production URL:** [https://arctic-map-yuy244yc7a-ue.a.run.app](https://arctic-map-yuy244yc7a-ue.a.run.app)
 
 ### Quick Deploy
 
