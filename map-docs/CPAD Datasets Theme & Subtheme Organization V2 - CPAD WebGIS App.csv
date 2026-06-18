@@ -1,0 +1,84 @@
+theme,subtheme,layer_name,display_name
+Socioeconomic,Education,a_alaska_schools,Alaska Schools
+Socioeconomic,Education,a_arctic_education_osm,Arctic Education
+Socioeconomic,Education,a_canada_universities,Canada Universities
+Socioeconomic,Education,a_greenland_universities,Greenland Universities
+Socioeconomic,Education,a_iceland_universities,Iceland Universities
+Socioeconomic,Education,a_murmansk_universities,Murmansk Universities
+Socioeconomic,Education,a_siberia_universities,Siberia Universities
+Socioeconomic,Human Settlements,a_gis_osm_places_a_free_1,Alaska A Places (polygon)
+Socioeconomic,Human Settlements,a_gis_osm_places_free_1,Alaska Places (point)​
+Socioeconomic,Human Settlements,a_gis_osm_pofw_a_free_1,Alaska A Places of Worship (polygon)​
+Socioeconomic,Human Settlements,a_gis_osm_pofw_free_1,Alaska Places of Worship (point)​
+Socioeconomic,Human Settlements,a_gis_osm_pois_a_free_1,Alaska A Places of Interest (polygon)​
+Socioeconomic,Human Settlements,a_gis_osm_pois_free_1,Alaska Places of Interest (point)​
+Socioeconomic,Human Settlements,a_alaska_points,Alaska Points (natural features and infrastructure) ​
+Socioeconomic,Human Settlements,a_clean_ca_geonames,Canada Geonames (human settlements and natural features)​
+Socioeconomic,Human Settlements,a_clean_gl_geonames,Greenland Geonames (human settlements and natural features)​
+Socioeconomic,Human Settlements,a_iceland_points,Iceland Points (natural features and infrastructure) ​
+Socioeconomic,Human Settlements,sweden_geonames,Sweden Geonames (human settlements and natural features)​
+Socioeconomic,Human Settlements,a_nordregion_acpr_sett_v1,Arctic Circumpolar Permafrost Region Settlements Ver 1
+Socioeconomic,Human Settlements,a_nordregion_acpr_sett_v2,Arctic Circumpolar Permafrost Region Settlements Ver 2
+Socioeconomic,Human Settlements,a_arctic_healthcare_osm,Arctic Healthcare
+Socioeconomic,Human Settlements,a_arctic_hospitality_osm,Arctic Hospitality
+Socioeconomic,Human Settlements,a_sweden_points,Sweden Points (natural features and infrastructure) ​
+Socioeconomic,Human Settlements,a_clean_cs_night_areas,Night Areas
+Socioeconomic,Human Settlements,clean_human_activities,Human Activities
+Socioeconomic,Administrative & Geographic Boundaries,finland_centroids,Finland Centroids (centroids of geographic and administrative regions) ​
+Socioeconomic,Administrative & Geographic Boundaries,a_alaska_multipolygons,Alaska Multipolygons (geographic and administrative boundaries) ​
+Socioeconomic,Administrative & Geographic Boundaries,finland_multipolygons,Finland Multipolygons (geographic and administrative boundaries) ​
+Socioeconomic,Administrative & Geographic Boundaries,clean_sweden_multipolygons,Sweden Multipolygons (geographic and administrative boundaries) ​
+Socioeconomic,Administrative & Geographic Boundaries,a_clean_ne_10m_countries,Administrative Country Boundaries
+Socioeconomic,Administrative & Geographic Boundaries,a_clean_arctic_regions,Arctic Regions
+Socioeconomic,Administrative & Geographic Boundaries,a_finland_merged,Finland Merged (geographic and administrative boundaries) ​
+Socioeconomic,Administrative & Geographic Boundaries,iceland_poly,"Iceland Polygons (geographic, administrative, land-use boundaries)​"
+Socioeconomic,Administrative & Geographic Boundaries,a_norway_polygons,"Norway Polygons (geographic, administrative, land-use boundaries)​"
+Socioeconomic,Administrative & Geographic Boundaries,political_boundaries_cleaned,Country Political Boundaries
+Socioeconomic,Administrative & Geographic Boundaries,cpad_arctic_base,CPAD Arctic Base Boundaries
+Environmental,Animal & Plant Distribution,iucn_amphibians,Amphibian Species​
+Environmental,Animal & Plant Distribution,iucn_mammals,Mammal Species​
+Environmental,Animal & Plant Distribution,iucn_plants,Plant Species​
+Environmental,Animal & Plant Distribution,iucn_reptiles,Reptile Species​
+Environmental,Animal & Plant Distribution,arctic_marine_biodiversity,Arctic Marine Biodiversity​
+Environmental,Animal & Plant Distribution,alaska_vegetation,Alaska Vegetation
+Environmental,Land Cover,a_gis_osm_landuse_a_free_1,Alaska Land Use ​
+Environmental,Land Cover,a_gis_osm_natural_a_free_1,Alaska Natural A Features (polygon)​
+Environmental,Land Cover,a_gis_osm_natural_free_1,Alaska Natural Features (point)​
+Environmental,Water Resources,arctic_sea_ice_time_series,Arctic Monthly Average Sea Ice Area​
+Environmental,Water Resources,a_gis_osm_water_a_free_1,Alaska Water A​
+Environmental,Water Resources,a_gis_osm_waterways_free_1,Alaska Waterways​
+Environmental,Water Resources,a_clean_public_marine_points,Public Marine Points​
+Environmental,Water Resources,a_clean_public_marine_0_polygons,Public Marine Polygons​
+Environmental,Maritime Claims & Resources​,extended_continental_shelf_boundaries,Extended Continental Shelf Claims Boundaries
+Environmental,Maritime Claims & Resources​,extended_continental_shelf_areas,Extended Continental Shelf Claims Areas
+Environmental,Natural Resources,global_mineral_resource_occurrences,Global Mineral Resource Occurrence​s
+Infrastructure,General,a_gis_osm_buildings_a_free_1,Alaska Buildings​
+Infrastructure,General,a_clean_arctic_infrastructure_inventory,Arctic Infrastructure Inventory​
+Infrastructure,General,a_clean_places_p,Wilson Center Infrastructure Projects​
+Infrastructure,Energy,oil_pipelines,Oil Pipelines​
+Infrastructure,Energy,liquefied_natural_gas_terminals,Liquefied Natural Gas Terminals​
+Infrastructure,Energy,gas_pipelines,Gas Pipelines​
+Infrastructure,Energy,a_globalpowerplant,Global Power Plants​
+Infrastructure,Transportation,a_clean_ne_10m_roads,10m Scale Roads​
+Infrastructure,Transportation,a_clean_ne_10m_railroads,10m Scale Railroads​
+Infrastructure,Transportation,a_gis_osm_railways_free_1,Alaska Railways​
+Infrastructure,Transportation,a_gis_osm_roads_free_1,Alaska Roads​
+Infrastructure,Transportation,a_clean_alaskan_airports,Alaskan Airports
+Infrastructure,Transportation,a_clean_ports_ahdr,AHDR Ports​
+Infrastructure,Transportation,clean_airports_ahdr,AHDR Airports​
+Infrastructure,Transportation,a_gis_osm_traffic_a_free_1,Alaska A Traffic (polygon)​
+Infrastructure,Transportation,a_gis_osm_traffic_free_1,Alaska Traffic (point)​
+Infrastructure,Transportation,a_gis_osm_transport_a_free_1,Iceland Transport A (polygon)​
+Infrastructure,Transportation,a_gis_osm_transport_free_1,Iceland Transport (point)​
+Infrastructure,Transportation,shipping_route_density_cleaned,Global Shipping Route Density
+Infrastructure,Transportation,route_SSP126_low_emissions,SSP126 Shipping Routes Low Emissions Scenario
+Infrastructure,Transportation,route_SSP245_moderate_emissions,SSP245 Shipping Routes Moderate Emissions Scenario
+Infrastructure,Transportation,route_SSP370_high_emissions,SSP370 Shipping Routes High Emissions Scenario
+Infrastructure,Transportation,route_SSP585_worst_case_emissions,SSP585 Shipping Routes Worst Case Emissions Scenario
+Infrastructure,Communication,submarine_cables_terminals,Submarine Cables and Terminals​
+Infrastructure,Shipping Routes,route_ssp126_2015,SSP 126 Low Emission Scenario for 2015
+Infrastructure,Shipping Routes,route_ssp126_2016,SSP 126 Low Emission Scenario for 2016
+Infrastructure,Shipping Routes,route_ssp126_2017,SSP 126 Low Emission Scenario for 2017
+Infrastructure,Shipping Routes,route_ssp126_2018,SSP 126 Low Emission Scenario for 2018
+Infrastructure,Shipping Routes,route_ssp126_2019,SSP 126 Low Emission Scenario for 2019
+Infrastructure,Shipping Routes,route_ssp126_2020,SSP 126 Low Emission Scenario for 2020

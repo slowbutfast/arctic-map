@@ -1,0 +1,99 @@
+Socioeconomic
+    Education
+        Alaska Schools
+        Arctic Education
+        Canada Universities
+        Greenland Universities
+        Iceland Universities
+        Murmansk Universities
+        Siberia Universities
+    Human Settlements
+        Alaska A Places (polygon)
+        Alaska Places (point)
+        Alaska A Places of Worship (polygon)
+        Alaska Places of Worship (point)
+        Alaska A Places of Interest (polygon)
+        Alaska Places of Interest (point)
+        Alaska Points (natural features and infrastructure) 
+        Canada Geonames (human settlements and natural features)
+        Greenland Geonames (human settlements and natural features)
+        Iceland Points (natural features and infrastructure) 
+        Sweden Geonames (human settlements and natural features)
+        Arctic Circumpolar Permafrost Region Settlements Ver 1
+        Arctic Circumpolar Permafrost Region Settlements Ver 2
+        Arctic Healthcare
+        Arctic Hospitality
+        Sweden Points (natural features and infrastructure) 
+        Night Areas
+        Human Activities
+    Administrative & Geographic Boundaries
+        Finland Centroids (centroids of geographic and administrative regions) 
+        Alaska Multipolygons (geographic and administrative boundaries) 
+        Finland Multipolygons (geographic and administrative boundaries) 
+        Sweden Multipolygons (geographic and administrative boundaries) 
+        Administrative Country Boundaries
+        Arctic Regions
+        Finland Merged (geographic and administrative boundaries) 
+        Iceland Polygons (geographic, administrative, land-use boundaries)
+        Norway Polygons (geographic, administrative, land-use boundaries)
+        Country Political Boundaries
+        CPAD Arctic Base Boundaries
+Environmental
+    Animal & Plant Distribution
+        Amphibian Species
+        Mammal Species
+        Plant Species
+        Reptile Species
+        Arctic Marine Biodiversity
+        Alaska Vegetation
+    Land Cover
+        Alaska Land Use 
+        Alaska Natural A Features (polygon)
+        Alaska Natural Features (point)
+    Water Resources
+        Arctic Monthly Average Sea Ice Area
+        Alaska Water A
+        Alaska Waterways
+        Public Marine Points
+        Public Marine Polygons
+    Maritime Claims & Resources
+        Extended Continental Shelf Claims Boundaries
+        Extended Continental Shelf Claims Areas
+    Natural Resources
+        Global Mineral Resource Occurrences
+Infrastructure
+    General
+        Alaska Buildings
+        Arctic Infrastructure Inventory
+        Wilson Center Infrastructure Projects
+    Energy
+        Oil Pipelines
+        Liquefied Natural Gas Terminals
+        Gas Pipelines
+        Global Power Plants
+    Transportation
+        10m Scale Roads
+        10m Scale Railroads
+        Alaska Railways
+        Alaska Roads
+        Alaskan Airports
+        AHDR Ports
+        AHDR Airports
+        Alaska A Traffic (polygon)
+        Alaska Traffic (point)
+        Iceland Transport A (polygon)
+        Iceland Transport (point)
+        Global Shipping Route Density
+        SSP126 Shipping Routes Low Emissions Scenario
+        SSP245 Shipping Routes Moderate Emissions Scenario
+        SSP370 Shipping Routes High Emissions Scenario
+        SSP585 Shipping Routes Worst Case Emissions Scenario
+    Communication
+        Submarine Cables and Terminals
+    Shipping Routes
+        SSP 126 Low Emission Scenario for 2015
+        SSP 126 Low Emission Scenario for 2016
+        SSP 126 Low Emission Scenario for 2017
+        SSP 126 Low Emission Scenario for 2018
+        SSP 126 Low Emission Scenario for 2019
+        SSP 126 Low Emission Scenario for 2020
