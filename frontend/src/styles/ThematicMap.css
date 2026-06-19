@@ -14,6 +14,22 @@
     align-items: center;
   }
   
+  @media (prefers-color-scheme: dark) {
+    .thematic-controls-container {
+      background-color: var(--surface-strong);
+      color: var(--app-text);
+      border: 1px solid var(--surface-border);
+    }
+    .thematic-controls-container label {
+      color: var(--app-text);
+    }
+    .thematic-controls-container select {
+      background-color: var(--surface);
+      color: var(--app-text);
+      border-color: var(--surface-border);
+    }
+  }
+  
   .thematic-legend-overlay {
     position: absolute;
     bottom: 50px;
@@ -27,6 +43,20 @@
     max-width: 250px;
   }
   
+  @media (prefers-color-scheme: dark) {
+    .thematic-legend-overlay {
+      background-color: var(--surface-strong);
+      color: var(--app-text);
+      border: 1px solid var(--surface-border);
+    }
+    .thematic-legend-overlay h3 {
+      color: var(--app-text);
+    }
+    .thematic-legend-overlay p {
+      color: var(--app-text-muted);
+    }
+  }
+  
   .thematic-attribute-key-overlay {
     position: absolute;
     top: 20px;
@@ -38,6 +68,25 @@
     border-radius: 5px;
     box-shadow: 0 2px 5px rgba(0,0,0,0.2);
     max-width: 300px;
+  }
+  
+  @media (prefers-color-scheme: dark) {
+    .thematic-attribute-key-overlay {
+      background-color: var(--surface-strong);
+      color: var(--app-text);
+      border: 1px solid var(--surface-border);
+    }
+    .thematic-attribute-key-overlay h3 {
+      color: var(--app-text);
+    }
+    .thematic-attribute-key-overlay p {
+      color: var(--app-text-muted);
+    }
+    .thematic-attribute-key-overlay button {
+      background-color: var(--surface);
+      color: var(--app-text);
+      border-color: var(--surface-border);
+    }
   }
   
   .thematic-attribute-key-overlay h3 {
@@ -73,9 +122,23 @@
     gap: 10px;
   }
   
+  @media (prefers-color-scheme: dark) {
+    .thematic-mode-toggle-standalone {
+      background-color: var(--surface-strong);
+      color: var(--app-text);
+      border: 1px solid var(--surface-border);
+    }
+  }
+  
   .toggle-label-text {
     font-size: 1em;
     color: #333;
+  }
+
+  @media (prefers-color-scheme: dark) {
+    .toggle-label-text {
+      color: var(--app-text);
+    }
   }
 
   /* Styling for the macOS-style toggle switch */

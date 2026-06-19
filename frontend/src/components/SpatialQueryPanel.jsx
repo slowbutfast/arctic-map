@@ -61,7 +61,8 @@ const SpatialQueryPanel = ({ highlightedFeatures, layerDisplayNames = {} }) => {
       position: 'absolute',
       bottom: '50px', 
       right: '10px', 
-      backgroundColor: 'rgba(255, 255, 255, 0.7)', // White with 70% opacity
+      backgroundColor: 'var(--surface-strong)',
+      color: 'var(--app-text)',
       padding: '15px',
       borderRadius: '8px',
       zIndex: 1000, // Ensure it's above the map
@@ -69,7 +70,7 @@ const SpatialQueryPanel = ({ highlightedFeatures, layerDisplayNames = {} }) => {
       maxHeight: '300px', // Limit height
       overflowY: 'auto' // Add scroll if content exceeds height
     }}>
-      <h6 style={{ margin: '0 0 10px 0', fontSize: '1em' }}>Query Results</h6>
+      <h6 style={{ margin: '0 0 10px 0', fontSize: '1em', color: 'var(--app-text)' }}>Query Results</h6>
       {Object.keys(groupedFeatures).length > 0 ? (
         <ul>
           {Object.entries(groupedFeatures).map(([layerName, features]) => {
@@ -83,11 +84,12 @@ const SpatialQueryPanel = ({ highlightedFeatures, layerDisplayNames = {} }) => {
                   onClick={() => handleDownload(layerName)}
                   style={{
                     marginLeft: '0px',
-                    padding: '5px 10px',
-                    backgroundColor: '#007bff',
+                    marginTop: '6px',
+                    padding: '6px 10px',
+                    backgroundColor: 'var(--primary)',
                     color: 'white',
                     border: 'none',
-                    borderRadius: '5px',
+                    borderRadius: '6px',
                     cursor: 'pointer'
                   }}
                 >

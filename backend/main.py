@@ -1,4 +1,4 @@
-from fastapi import FastAPI, HTTPException, Response, Query
+from fastapi import FastAPI, HTTPException, Response, Query, status
 from fastapi.middleware.cors import CORSMiddleware
 import geopandas as gpd
 import pandas as pd
@@ -33,28 +33,7 @@ app.add_middleware(
     allow_headers=["*"],
 )
 
-# Automatically determine DB_PATH based on environment
-def get_db_path():
-    """
-    Automatically determine the correct database path:
-    1. Check if running in Docker (/app/database/cpad.sqlite)
-    2. Fall back to local development path (relative to this file)
-    """
-    # Check for database in Docker /app/database directory
-    docker_path = "/app/database/cpad.sqlite"
-    if os.path.exists(docker_path):
-        return docker_path
-    
-    # Default to local path relative to this file
-    local_path = os.path.join(os.path.dirname(__file__), "cpad.sqlite")
-    return local_path
-
-DB_PATH = get_db_path()
-
-@app.on_event("startup")
-async def startup_event():
-    """Log database path on application startup"""
-    print(f"[INFO] Using database at: {DB_PATH}")
+DB_PATH = "cpad.sqlite"
 
 def get_available_layers():
     try:
@@ -325,6 +304,7 @@ async def geocode(query: str = Query(...)):
         raise HTTPException(status_code=500, detail=f"An unexpected error occurred: {e}")
     
 
+# data structures for the spatial-query endpoint to define custom request and response structures
 # data structures for the spatial-query endpoint to define custom request and response structures
 class SpatialQueryRequest(BaseModel):
     """defines structure of the request data the frontend sends to /api/spatial-query endpoint"""

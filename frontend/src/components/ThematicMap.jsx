@@ -1,6 +1,5 @@
 import React, { useState, useEffect, useCallback } from 'react';
 import thematicMapConfigs from '../config/thematicMapConfigs';
-import { getApiUrl } from '../config/api';
 import '../styles/ThematicMap.css'; 
 
 // Helper function to apply thematic styling 
@@ -20,7 +19,7 @@ const applyThematicStyling = async (map, layerConfig, attribute, setMinMaxValues
   if (map.getSource(sourceId)) map.removeSource(sourceId);
 
   try {
-    const res = await fetch(getApiUrl(`/api/geojson/${layerConfig.layerName}`));
+    const res = await fetch(`http://localhost:8000/api/geojson/${layerConfig.layerName}`);
     if (!res.ok) throw new Error(`HTTP error! status: ${res.status}`);
     const geojson = await res.json();
 
@@ -169,7 +168,7 @@ const ThematicMap = ({ mapboxMap, onThematicModeToggle }) => {
 
   const handleViewMetadata = () => {
     if (selectedAttributeId) {
-      window.open(getApiUrl(`/api/metadata_html/${selectedAttributeId}`, "_blank"));
+      window.open(`http://localhost:8000/api/metadata_html/${selectedAttributeId}`, "_blank");
     } else {
       console.warn("No attribute selected to view metadata.");
     }
@@ -222,9 +221,11 @@ const ThematicMap = ({ mapboxMap, onThematicModeToggle }) => {
         transform: 'translateX(-50%)', // Pull back by half its width to truly center
         zIndex: 2,
         pointerEvents: 'auto',
-        backgroundColor: 'white',
+        backgroundColor: 'var(--surface-strong)',
+        color: 'var(--app-text)',
         padding: '10px',
         borderRadius: '5px',
+        border: '1px solid var(--surface-border)',
         boxShadow: '0 2px 5px rgba(0,0,0,0.2)',
         display: 'flex', // Use flexbox for internal layout
         gap: '10px', // Space between dropdowns
@@ -238,8 +239,8 @@ const ThematicMap = ({ mapboxMap, onThematicModeToggle }) => {
         )} */}
 
         <div>
-          <label htmlFor="thematic-layer-select" style={{ marginRight: '5px' }}>Layer:</label>
-          <select id="thematic-layer-select" value={selectedLayerId} onChange={handleLayerChange} style={{ padding: '5px', borderRadius: '3px' }}>
+          <label htmlFor="thematic-layer-select" style={{ marginRight: '5px', color: 'var(--app-text)' }}>Layer:</label>
+          <select id="thematic-layer-select" value={selectedLayerId} onChange={handleLayerChange} style={{ padding: '5px', borderRadius: '3px', backgroundColor: 'var(--surface)', color: 'var(--app-text)', borderColor: 'var(--surface-border)' }}>
             <option value="">Select a Layer</option>
             {availableLayerIds.map(layerId => (
               <option key={layerId} value={layerId}>
@@ -251,13 +252,13 @@ const ThematicMap = ({ mapboxMap, onThematicModeToggle }) => {
 
         {currentThematicLayerConfig && currentThematicLayerConfig.attributes && currentThematicLayerConfig.attributes.length > 0 && (
           <div>
-            <label htmlFor="thematic-attribute-select" style={{ marginRight: '5px' }}>Attribute:</label>
+            <label htmlFor="thematic-attribute-select" style={{ marginRight: '5px', color: 'var(--app-text)' }}>Attribute:</label>
             <select
               id="thematic-attribute-select"
               value={selectedAttributeId}
               onChange={handleAttributeChange}
               disabled={!currentThematicLayerConfig}
-              style={{ padding: '5px', borderRadius: '3px' }}
+              style={{ padding: '5px', borderRadius: '3px', backgroundColor: 'var(--surface)', color: 'var(--app-text)', borderColor: 'var(--surface-border)' }}
             >
               <option value="">Select an Attribute</option>
               {currentThematicLayerConfig.attributes.map(attr => (
@@ -276,16 +277,18 @@ const ThematicMap = ({ mapboxMap, onThematicModeToggle }) => {
           right: '20px',
           zIndex: 2,
           pointerEvents: 'auto',
-          backgroundColor: 'white',
+          backgroundColor: 'var(--surface-strong)',
+          color: 'var(--app-text)',
           padding: '15px',
           borderRadius: '5px',
+          border: '1px solid var(--surface-border)',
           boxShadow: '0 2px 5px rgba(0,0,0,0.2)',
           maxWidth: '250px'
         }}>
           <h3>
             Legend: {selectedAttributeDetails ? selectedAttributeDetails.display_name : selectedAttributeId} 
             {selectedAttributeDetails && selectedAttributeDetails.units && (
-              <span style={{ fontSize: '0.8em', color: '#666', marginLeft: '5px' }}>
+              <span style={{ fontSize: '0.8em', color: 'var(--app-text-muted)', marginLeft: '5px' }}>
                 ({selectedAttributeDetails.units})
               </span>
             )}
@@ -306,7 +309,7 @@ const ThematicMap = ({ mapboxMap, onThematicModeToggle }) => {
               </div>
             ))}
           </div>
-          <p style={{ fontSize: '0.8em', color: '#666', marginTop: '10px' }}>
+          <p style={{ fontSize: '0.8em', color: 'var(--app-text-muted)', marginTop: '10px' }}>
             Values range from {minMaxValues.min !== null ? minMaxValues.min.toFixed(2) : 'N/A'} to {minMaxValues.max !== null ? minMaxValues.max.toFixed(2) : 'N/A'}.
           </p>
         </div>
@@ -320,14 +323,16 @@ const ThematicMap = ({ mapboxMap, onThematicModeToggle }) => {
           right: '20px',
           zIndex: 2,
           pointerEvents: 'auto',
-          backgroundColor: 'white',
+          backgroundColor: 'var(--surface-strong)',
+          color: 'var(--app-text)',
           padding: '15px',
           borderRadius: '5px',
+          border: '1px solid var(--surface-border)',
           boxShadow: '0 2px 5px rgba(0,0,0,0.2)',
           maxWidth: '300px'
         }}>
           <h3>Attribute Key: {selectedAttributeDetails.display_name}</h3>
-          <p style={{ fontSize: '0.9em', color: '#333' }}>
+          <p style={{ fontSize: '0.9em', color: 'var(--app-text)' }}>
             {selectedAttributeDetails.description}
           </p>
 
@@ -337,8 +342,9 @@ const ThematicMap = ({ mapboxMap, onThematicModeToggle }) => {
               padding: '5px 10px',
               fontSize: '0.8em',
               cursor: 'pointer',
-              backgroundColor: '#f0f0f0',
-              border: '1px solid #ccc',
+              backgroundColor: 'var(--surface)',
+              color: 'var(--app-text)',
+              border: '1px solid var(--surface-border)',
               borderRadius: '3px'
             }}
           >
