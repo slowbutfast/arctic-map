@@ -3,9 +3,10 @@ import re
 import csv
 import shutil
 
-md_path = "/Users/gregorylazatin/Documents/Dev/projects/pct-chatbot/pct-git/arctic-map/map-docs/Meta Data based on ISO 19115 Standards.md"
-csv_path = "/Users/gregorylazatin/Documents/Dev/projects/pct-chatbot/pct-git/arctic-map/map-docs/CPAD Datasets Theme & Subtheme Organization V2 - CPAD WebGIS App.csv"
-output_dir = "/Users/gregorylazatin/Documents/Dev/projects/pct-chatbot/pct-git/arctic-map/map-docs/cleaned_metadata"
+script_dir = os.path.dirname(os.path.abspath(__file__))
+md_path = os.path.join(script_dir, "Meta Data based on ISO 19115 Standards.md")
+csv_path = os.path.join(script_dir, "CPAD Datasets Theme & Subtheme Organization V2 - CPAD WebGIS App.csv")
+output_dir = os.path.join(script_dir, "cleaned_metadata")
 
 # Manual mappings for layers with naming mismatches in the MD file
 MANUAL_MAPPING = {
