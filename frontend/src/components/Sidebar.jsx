@@ -13,6 +13,28 @@ const Popup = ({ title, onClose, children }) => (
   </div>
 );
 
+const COLOR_PALETTE = [
+  '#e6194b', '#ffe119', '#0082c8', '#ffb3ba', '#00a651',
+  '#46f0f0', '#4b0082', '#dda0dd', '#8b4513', '#ffd700',
+  '#000000', '#ffffff', '#ff8c00', '#90ee90', '#800080',
+  '#ffe4e1', '#008080', '#ffffe0', '#2f4f4f', '#fa8072'
+];
+
+const layerColorMap = {};
+let allKnownLayers = [];
+
+const getLayerColor = (layerName) => {
+  // Track all layers and assign colors by alphabetical order
+  if (!layerColorMap.hasOwnProperty(layerName)) {
+    allKnownLayers.push(layerName);
+    allKnownLayers.sort();
+    allKnownLayers.forEach((name, idx) => {
+      layerColorMap[name] = COLOR_PALETTE[idx % COLOR_PALETTE.length];
+    });
+  }
+  return layerColorMap[layerName];
+};
+
 const Sidebar = ({ onLayerToggle, isThematicMode, onThematicModeToggle, isSidebarOpen }) => {
   const [layers, setLayers] = useState([]);
   const [selectedLayers, setSelectedLayers] = useState({});
@@ -24,6 +46,9 @@ const Sidebar = ({ onLayerToggle, isThematicMode, onThematicModeToggle, isSideba
   const [confirmDownloadLayer, setConfirmDownloadLayer] = useState(null);
   const [showBatchDownloadPopup, setShowBatchDownloadPopup] = useState(false);
   const [showAboutPopup, setShowAboutPopup] = useState(false);
+
+
+
 
   useEffect(() => {
     fetch(getApiUrl("/api/layer_hierarchy"))
@@ -175,35 +200,6 @@ const Sidebar = ({ onLayerToggle, isThematicMode, onThematicModeToggle, isSideba
   return (
     <div className={`sidebar ${isSidebarOpen ? '' : 'sidebar-collapsed'}`}>
       
-      <div className="sidebar-instructions">
-        {/* Make header clickable to open the new popup */}
-        <div className="about-header-container">
-          <h3
-            onClick={() => setShowAboutPopup(true)}
-            style={{ cursor: 'pointer' }}
-          >
-            About Arctic Map ⓘ
-          </h3>
-          
-        </div>
-
-        {/* Thematic Mode Toggle Switch and Label */}
-        <div className="toggle-container">
-          <label htmlFor="thematic-mode-toggle" className="toggle-switch">
-            <input
-              type="checkbox"
-              id="thematic-mode-toggle"
-              checked={isThematicMode}
-              onChange={onThematicModeToggle}
-            />
-            <span className="slider"></span>
-          </label>
-          <span className="toggle-label-text">
-            {isThematicMode ? "Switch to Main Map" : "Switch to Thematic Map"}
-          </span>
-        </div>
-      </div>
-
       <div className="sidebar-data-layers">
         <h2>Dataset Layers</h2>
         
@@ -233,18 +229,39 @@ const Sidebar = ({ onLayerToggle, isThematicMode, onThematicModeToggle, isSideba
                             type="checkbox"
                             checked={selectedLayers[dataset.layer_name] || false}
                             onChange={() => handleToggle(dataset.layer_name)}
+                            style={{
+                              backgroundColor: selectedLayers[dataset.layer_name] ? getLayerColor(dataset.layer_name) : 'transparent',
+                              borderColor: selectedLayers[dataset.layer_name] ? getLayerColor(dataset.layer_name) : 'rgba(0,0,0,0.3)',
+                            }}
                           />
                           {dataset.display_name}
                           </label>
                           <div className="layer-actions-below">
                             <button onClick={() => handleViewAttributes(dataset.layer_name)}>
-                              View Attributes
+                              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" width="14" height="14" aria-hidden="true">
+                                <path d="M3 3h18v18H3z" />
+                                <path d="M3 9h18M3 15h18M9 3v18M15 3v18" />
+                              </svg>
+                              Attributes
                             </button>
                             <button onClick={() => setConfirmDownloadLayer(dataset.layer_name)}>
+                              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" width="14" height="14" aria-hidden="true">
+                                <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4" />
+                                <polyline points="7 10 12 15 17 10" />
+                                <line x1="12" y1="15" x2="12" y2="3" />
+                              </svg>
                               Download
                             </button>
-                            <button onClick={() => window.open(getApiUrl(`/api/metadata_html/${dataset.layer_name}`, "_blank"))}>
-                              View Metadata
+                            <button
+                              onClick={() => window.open(getApiUrl(`/api/metadata_html/${dataset.layer_name}`, "_blank"))}
+                              className="layer-action-wide"
+                            >
+                              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" width="14" height="14" aria-hidden="true">
+                                <circle cx="12" cy="12" r="10" />
+                                <line x1="12" y1="16" x2="12" y2="12" />
+                                <line x1="12" y1="8" x2="12.01" y2="8" />
+                              </svg>
+                              Metadata
                             </button>
                           </div>
                         </li>

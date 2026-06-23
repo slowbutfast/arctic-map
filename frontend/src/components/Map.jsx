@@ -2,11 +2,32 @@ import React, { useEffect, useRef, useCallback, useState } from "react";
 import * as mapboxgl from "mapbox-gl";
 import "mapbox-gl/dist/mapbox-gl.css";
 import FeatureHighlighter from './FeatureHighlighter';
-import SearchBar from './SearchBar';
 import DrawControls from './DrawControls';
 import SpatialQueryPanel from './SpatialQueryPanel';
 import bbox from '@turf/bbox';
 import { getApiUrl } from '../config/api';
+
+const COLOR_PALETTE = [
+  '#e6194b', '#ffe119', '#0082c8', '#ffb3ba', '#00a651',
+  '#46f0f0', '#4b0082', '#dda0dd', '#8b4513', '#ffd700',
+  '#000000', '#ffffff', '#ff8c00', '#90ee90', '#800080',
+  '#ffe4e1', '#008080', '#ffffe0', '#2f4f4f', '#fa8072'
+];
+
+const layerColorMap = {};
+let allKnownLayers = [];
+
+const getLayerColor = (layerName) => {
+  // Track all layers and assign colors by alphabetical order
+  if (!layerColorMap.hasOwnProperty(layerName)) {
+    allKnownLayers.push(layerName);
+    allKnownLayers.sort();
+    allKnownLayers.forEach((name, idx) => {
+      layerColorMap[name] = COLOR_PALETTE[idx % COLOR_PALETTE.length];
+    });
+  }
+  return layerColorMap[layerName];
+};
 
 // Security utility functions - placed outside the component
 const escapeHtml = (unsafe) => {
@@ -72,6 +93,7 @@ const Map = ({
   activeLayers,
   onDrawGeometry,
   highlightedFeatures,
+  drawRef,
 }) => {
   const [layerDisplayNames, setLayerDisplayNames] = useState({});
 
@@ -161,6 +183,7 @@ const Map = ({
     });
 
     const layerTypes = new Set(validFeatures.map(f => f.geometry.type));
+    const layerColor = getLayerColor(layerName);
     
     // Add layers for polygons, lines, points and their click listeners
     if (layerTypes.has("Polygon") || layerTypes.has("MultiPolygon")) {
@@ -170,8 +193,8 @@ const Map = ({
         source: sourceId,
         filter: ["==", "$type", "Polygon"],
         paint: {
-          "fill-color": "#007bff",
-          "fill-opacity": 0.35,
+          "fill-color": layerColor,
+          "fill-opacity": 0.2,
         },
       });
       mapboxMap.addLayer({
@@ -180,7 +203,7 @@ const Map = ({
         source: sourceId,
         filter: ["==", "$type", "Polygon"],
         paint: {
-          "line-color": "#0056b3",
+          "line-color": layerColor,
           "line-width": 2,
         },
       });
@@ -194,8 +217,9 @@ const Map = ({
         source: sourceId,
         filter: ["==", "$type", "LineString"],
         paint: {
-          "line-color": "#28a745",
+          "line-color": layerColor,
           "line-width": 3,
+          "line-opacity": 0.6,
         },
       });
       addPopupClickListeners(`${layerId}-lines`, layerName);
@@ -209,9 +233,10 @@ const Map = ({
         filter: ["==", "$type", "Point"],
         paint: {
           "circle-radius": 6,
-          "circle-color": "#dc3545",
-          "circle-stroke-color": "#a71d2a",
+          "circle-color": layerColor,
+          "circle-stroke-color": layerColor,
           "circle-stroke-width": 2,
+          "circle-opacity": 0.7,
         },
       });
       addPopupClickListeners(`${layerId}-points`, layerName);
@@ -359,6 +384,7 @@ const Map = ({
 
               const layerTypes = new Set(validFeatures.map(f => f.geometry.type));
               const layerId = `layer-${layerName}`;
+              const layerColor = getLayerColor(layerName);
               
               // Add layers for polygons, lines, points and their SECURE click listeners
               if (layerTypes.has("Polygon") || layerTypes.has("MultiPolygon")) {
@@ -368,8 +394,8 @@ const Map = ({
                   source: sourceId,
                   filter: ["==", "$type", "Polygon"],
                   paint: {
-                    "fill-color": "#007bff",
-                    "fill-opacity": 0.35,
+                    "fill-color": layerColor,
+                    "fill-opacity": 0.2,
                   },
                 });
                 mapboxMap.addLayer({
@@ -378,7 +404,7 @@ const Map = ({
                   source: sourceId,
                   filter: ["==", "$type", "Polygon"],
                   paint: {
-                    "line-color": "#0056b3",
+                    "line-color": layerColor,
                     "line-width": 2,
                   },
                 });
@@ -397,8 +423,9 @@ const Map = ({
                   source: sourceId,
                   filter: ["==", "$type", "LineString"],
                   paint: {
-                    "line-color": "#28a745",
+                    "line-color": layerColor,
                     "line-width": 3,
+                    "line-opacity": 0.6,
                   },
                 });
                 
@@ -417,9 +444,10 @@ const Map = ({
                   filter: ["==", "$type", "Point"],
                   paint: {
                     "circle-radius": 6,
-                    "circle-color": "#dc3545",
-                    "circle-stroke-color": "#a71d2a",
+                    "circle-color": layerColor,
+                    "circle-stroke-color": layerColor,
                     "circle-stroke-width": 2,
+                    "circle-opacity": 0.7,
                   },
                 });
                 
@@ -500,11 +528,7 @@ const Map = ({
   return (
     <>
       {mapboxMap && (
-          <SearchBar map={mapboxMap} />
-      )}
-
-      {mapboxMap && (
-          <DrawControls map={mapboxMap} onDrawGeometry={onDrawGeometry} />
+          <DrawControls map={mapboxMap} onDrawGeometry={onDrawGeometry} drawRef={drawRef} />
       )}
 
       {mapboxMap && <FeatureHighlighter mapboxMap={mapboxMap} highlightedFeatures={highlightedFeatures} />}

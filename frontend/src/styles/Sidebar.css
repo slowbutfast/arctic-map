@@ -1,22 +1,24 @@
 .sidebar {
   width: 320px;
-  background-color: #ffffff;
-  border-right: 1px solid #ddd;
+  background-color: var(--surface);
+  border-right: 1px solid var(--surface-border);
   height: 100vh;
   display: flex;
   flex-direction: column;
   font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+  color: var(--app-text);
 }
 
 .sidebar-instructions {
   max-height: 150px; 
   overflow-y: auto;
   padding: 20px;
-  margin-bottom: 0px; /* Adds space between instructions and layer list */
+  margin-bottom: 0px;
   margin-top: -20px;
-  padding-bottom: 10px; /* Padding to the bottom of the content */
-  border-bottom: 1px solid #ddd; /* A separator line */
-  background: #f0f0f0;
+  padding-bottom: 10px;
+  border-bottom: 1px solid var(--surface-border);
+  background: var(--surface-strong);
+  color: var(--app-text);
 }
 
 .sidebar-data-layers {
@@ -28,44 +30,40 @@
 .sidebar h2 {
   font-size: 18px;
   margin-bottom: 16px;
-  color: #333;
-  border-bottom: 1px solid #eee;
+  color: var(--app-text);
+  border-bottom: 1px solid var(--surface-border);
   padding-bottom: 8px;
 }
 
-/* New styles for Theme items */
 .theme-item {
-  margin-bottom: 20px; /* Space between different themes */
-  border-bottom: 1px solid #eee; /* Optional: Separator for themes */
-  padding-bottom: 15px; /* Space before separator */
+  margin-bottom: 20px;
+  border-bottom: 1px solid #eee;
+  padding-bottom: 15px;
 }
 
 .theme-item:last-child {
-  border-bottom: none; /* No separator for the last theme */
+  border-bottom: none;
   margin-bottom: 0;
 }
 
 .theme-header {
   font-size: 18px; 
   font-weight: bold;
-  color: #0077cc; 
+  color: var(--primary); 
   margin-top: 0;
-  margin-bottom: 10px; /* Space between theme header and its subthemes */
+  margin-bottom: 10px;
   padding-bottom: 5px;
-  /* border-bottom: 2px solid #1976d2; Optional underline for theme header */
 }
 
-/* New wrapper list for subthemes within a theme */
 .subtheme-list {
   list-style: none;
   padding: 0;
   margin: 0;
-  margin-left: 10px; /* Indent subthemes slightly under the theme */
+  margin-left: 10px;
 }
 
-/* Subtheme item (replaces the old .layer-item if you want distinct styling) */
 .subtheme-item {
-  margin-bottom: 8px; /* Space between subthemes */
+  margin-bottom: 8px;
 }
 
 .layer-list {
@@ -78,43 +76,40 @@
   margin-bottom: 12px;
 }
 
-/* Header for each subtheme group */
 .layer-group-header {
   display: flex;
   justify-content: space-between;
   align-items: center;
   padding: 8px 10px;
   cursor: pointer;
-  background-color: #f0f0f0; /* Light background for subtheme headers */
+  background-color: var(--surface-strong);
   margin-bottom: 5px;
   border-radius: 4px;
 }
 
 .layer-group-header h3 {
-  margin: 0; /* Remove default margin from h3 */
-  font-size: 16px; /* Adjust font size as needed */
+  margin: 0;
+  font-size: 16px;
   color: #333;
 }
 
-/* Toggle icon for subthemes */
 .collapse-icon {
   margin-left: 10px;
   font-size: 10px;
   transition: transform 0.2s ease;
-  color: #555; /* Color for the toggle icon */
+  color: #555;
 }
 
-/* List of datasets under each subtheme */
 .subtheme-dataset-list {
-  list-style: none; /* Removes bullet points */
+  list-style: none;
   padding: 0; 
-  margin-left: 5px; /* Indent the dataset list */
+  margin-left: 5px;
   margin-top: 5px;
   margin-bottom: 10px;
 }
 
 .subtheme-dataset-list .dataset-item-row {
-  margin-bottom: 15px; /* Spacing between dataset items */
+  margin-bottom: 15px;
   display: flex;
   flex-direction: column;
   align-items: flex-start;
@@ -125,7 +120,7 @@
   align-items: center;
   cursor: pointer;
   font-size: 14px;
-  color: #555;
+  color: var(--app-text);
   margin-bottom: 8px;
   width: 100%;
 }
@@ -136,9 +131,9 @@
   height: 18px;
   appearance: none;
   -webkit-appearance: none;
-  background-color: white;
-  border: 2px solid black;
-  border-radius: 2px;
+  background-color: transparent;
+  border: 2px solid rgba(0, 0, 0, 0.3);
+  border-radius: 4px;
   cursor: pointer;
   position: relative;
   display: inline-block;
@@ -147,41 +142,88 @@
 }
 
 .subtheme-dataset-list input[type="checkbox"]:checked::before {
-  content: "";
-  position: absolute;
-  top: 50%;
-  left: 50%;
-  width: 6px;
-  height: 10px;
-  border: solid black;
-  border-width: 0 2px 2px 0;
-  transform: translate(-50%, -50%) rotate(45deg);
+  content: none;
 }
 
-/* styling for each dataset layer's view attributes, download, and view metadata */
 .layer-actions-below {
-  display: flex; /* Makes the buttons appear in a row */
-  flex-direction: row; 
-  gap: 5px; /* Space between buttons */
-  margin-left: 26px; /* Indent buttons to align with text, accounting for checkbox */
-  align-items: center; /* Vertically align buttons */
+  display: flex;
+  flex-direction: row;
+  flex-wrap: wrap;
+  gap: 5px;
+  margin-left: 26px;
+  align-items: center;
 }
 
 .layer-actions-below button {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
   background-color: #e7e7e7;
   border: 1px solid #ccc;
-  padding: 3px 6px; /* Smaller padding for smaller buttons */
+  padding: 3px 6px;
   border-radius: 3px;
   cursor: pointer;
-  font-size: 11px; /* Smaller font size for buttons */
-  white-space: nowrap; /* Prevent button text from wrapping */
+  font-size: 11px;
+  white-space: nowrap;
+  color: var(--app-text);
+  min-width: 92px;
+  justify-content: center;
 }
 
-.layer-actions button:hover {
+.layer-actions-below button.layer-action-wide {
+  flex: 0 0 auto;
+  min-width: 190px;
+  justify-content: center;
+}
+
+.layer-actions button:hover,
+.layer-actions-below button:hover {
   background-color: #dcdcdc;
 }
 
-/* Old .layer-header styles, might not be needed depending on usage */
+@media (prefers-color-scheme: dark) {
+  .sidebar h2 { color: #ffffff; }
+  .theme-header { color: #ffffff; }
+  .layer-group-header h3 { color: #ffffff; }
+  .collapse-icon { color: rgba(255,255,255,0.7); }
+  .subtheme-dataset-list label { color: #ffffff; }
+  .layer-list label { color: #ffffff; }
+
+  .subtheme-dataset-list input[type="checkbox"]:not(:checked),
+  .layer-list input[type="checkbox"]:not(:checked) {
+    border-color: #ffffff !important;
+    background-color: transparent !important;
+  }
+
+  .subtheme-dataset-list input[type="checkbox"]:checked,
+  .layer-list input[type="checkbox"]:checked {
+    border-color: #ffffff !important;
+  }
+
+  .layer-actions-below button {
+    display: inline-flex;
+    align-items: center;
+    gap: 4px;
+    background-color: #26333a;
+    border: 1px solid rgba(255,255,255,0.04);
+    padding: 6px 10px;
+    border-radius: 6px;
+    cursor: pointer;
+    font-size: 12px;
+    white-space: nowrap;
+    color: #ffffff;
+  }
+
+.layer-actions-below button.layer-action-wide {
+  flex: 0 0 auto;
+  min-width: 190px;
+  justify-content: center;
+}
+
+  .layer-actions button:hover,
+  .layer-actions-below button:hover { background-color: #1b262b; }
+}
+
 .layer-header {
   display: flex;
   justify-content: space-between;
@@ -189,11 +231,10 @@
 }
 
 .layer-list label {
-  /* display: flex; */
-  display: inline-block; /* for consistent width checkboxes */ 
+  display: inline-block;
   align-items: center;
   font-size: 14px;
-  color: #444;
+  color: var(--app-text);
   cursor: pointer;
 }
 
@@ -203,9 +244,9 @@
   height: 18px;
   appearance: none;
   -webkit-appearance: none;
-  background-color: white;
-  border: 2px solid black;
-  border-radius: 2px;
+  background-color: transparent;
+  border: 2px solid rgba(0, 0, 0, 0.3);
+  border-radius: 4px;
   cursor: pointer;
   position: relative;
   display: inline-block;
@@ -214,15 +255,7 @@
 }
 
 .layer-list input[type="checkbox"]:checked::before {
-  content: "";
-  position: absolute;
-  top: 50%;
-  left: 50%;
-  width: 6px;
-  height: 10px;
-  border: solid black;
-  border-width: 0 2px 2px 0;
-  transform: translate(-50%, -50%) rotate(45deg);
+  content: none;
 }
 
 .dropdown-menu {
@@ -266,7 +299,6 @@
   background-color: #005fa3;
 }
 
-/* Popup overlay */
 .attribute-popup {
   position: fixed;
   top: 0;
@@ -280,9 +312,8 @@
   z-index: 1000;
 }
 
-/* Dynamic, wider popup */
 .popup-content {
-  background: #fff;
+  background: var(--surface-strong);
   padding: 20px;
   border-radius: 8px;
   max-height: 85vh;
@@ -293,9 +324,10 @@
   position: relative;
   box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
   transition: all 0.3s ease;
+  border: 1px solid var(--surface-border);
+  color: var(--app-text);
 }
 
-/* Responsive popup for smaller screens */
 @media (max-width: 768px) {
   .popup-content {
     width: 95vw;
@@ -310,11 +342,11 @@
 }
 
 .popup-content h3 {
-  color: #333;
+  color: var(--app-text);
   font-size: 20px;
   margin-top: 0;
   margin-bottom: 15px;
-  padding-right: 30px; /* Make space for close button */
+  padding-right: 30px;
 }
 
 .popup-content .close-btn {
@@ -325,7 +357,7 @@
   border: none;
   font-size: 24px;
   cursor: pointer;
-  color: #888;
+  color: var(--app-text-muted);
   line-height: 1;
 }
 
@@ -339,7 +371,7 @@
   gap: 10px;
   margin-top: 20px;
   padding-top: 10px;
-  border-top: 1px solid #eee;
+  border-top: 1px solid var(--surface-border);
 }
 
 .button-row button {
@@ -353,8 +385,8 @@
 }
 
 .button-row button:first-child {
-  background-color: #f0f0f0;
-  color: #555;
+  background-color: var(--surface);
+  color: var(--app-text);
 }
 
 .button-row button:first-child:hover {
@@ -362,7 +394,7 @@
 }
 
 .button-row button:last-child {
-  background-color: #007bff;
+  background-color: var(--primary);
   color: white;
 }
 
@@ -376,7 +408,6 @@
   color: #666666;
 }
 
-/* Query bar above attribute table */
 .query-bar {
   margin-bottom: 12px;
 }
@@ -385,11 +416,12 @@
   width: 100%;
   padding: 8px;
   font-size: 14px;
-  border: 1px solid #ccc;
+  border: 1px solid var(--surface-border);
   border-radius: 4px;
+  background: var(--surface-strong);
+  color: var(--app-text);
 }
 
-/* Table styling */
 .table-container {
   overflow-x: auto;
   margin-top: 16px;
@@ -439,15 +471,26 @@ td {
   }
 }
 
-/* Map Mode Toggle Switch Styles */
 .toggle-container {
   display: flex;
   align-items: center;
   gap: 10px;
   margin: 10px 0;
-  padding: 5px;
-  border-radius: 5px;
-  background-color: #f0f0f0;
+  padding: 8px 12px;
+  border-radius: 999px;
+  background-color: transparent;
+  border: 1px solid transparent;
+}
+
+.toggle-container .toggle-label-text {
+  color: var(--app-text);
+}
+
+@media (prefers-color-scheme: dark) {
+  .toggle-container {
+    background-color: var(--surface-strong);
+    border: 1px solid var(--surface-border);
+  }
 }
 
 .toggle-switch {
@@ -495,52 +538,46 @@ input:checked + .slider:before {
   transform: translateX(20px);
 }
 
-
-/* New class for the collapsed sidebar */
 .sidebar-collapsed {
   width: 20px; 
   padding: 0;
-  overflow: hidden; /* Hide all content when collapsed */
+  overflow: hidden;
 }
 
 .sidebar-collapsed > * {
   opacity: 0;
-  pointer-events: none; /* Prevents interaction with hidden elements */
+  pointer-events: none;
   transition: opacity 0.3s ease-in-out;
 }
 
-/* Styles for the sidebar toggle button */
 .sidebar-toggle-button {
   position: absolute;
   top: 50%;
   transform: translateY(-50%);
   z-index: 100;
-  background-color: #f8f8f8;
-  border: 1px solid #ddd;
-  border-left: none; /* Remove left border so it connects to sidebar */
+  background-color: var(--surface);
+  border: 1px solid var(--surface-border);
+  border-left: none;
   border-radius: 0 5px 5px 0;
   cursor: pointer;
   padding: 10px 8px;
   box-shadow: 2px 0 5px rgba(0, 0, 0, 0.1);
   font-weight: bold;
   user-select: none;
-  transition: left 0.3s ease-in-out;
-  color: #666;
+  transition: left 0.3s ease-in-out, background-color 0.15s ease;
+  color: var(--app-text);
   font-size: 14px;
   line-height: 1;
 }
 
 .sidebar-toggle-button:hover {
-  background-color: #e8e8e8;
-  color: #333;
+  background-color: var(--surface-strong);
 }
 
-/* When sidebar is open - position button at right edge of sidebar */
 .sidebar-toggle-button.is-open {
-  left: 0px; /* Match the sidebar width exactly */
+  left: 0px;
 }
 
-/* When sidebar is closed - position button at left edge of screen */
 .sidebar-toggle-button.is-closed {
-  left: 0px; /* Match the collapsed sidebar width */
+  left: 0px;
 }
