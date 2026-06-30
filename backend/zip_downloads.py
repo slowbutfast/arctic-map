@@ -38,6 +38,14 @@ def download_selected_layers(layers: str = Query(..., description="Comma-separat
         for layer in layer_list:
             zip_filename = f"{layer}.zip"
             zip_path = os.path.join(ZIP_DIR, zip_filename)
+            
+            # If missing locally, try fetching it
+            if not os.path.exists(zip_path):
+                try:
+                    _fetch_shapefile_from_production(zip_filename)
+                except Exception:
+                    pass
+
             if not os.path.exists(zip_path):
                 print(f"[WARN] Missing file: {zip_path}")
                 continue
@@ -54,11 +62,29 @@ def download_selected_layers(layers: str = Query(..., description="Comma-separat
         background=BackgroundTask(lambda: os.remove(bundle_path))
     )
 
+def _fetch_shapefile_from_production(filename: str):
+    os.makedirs(ZIP_DIR, exist_ok=True)
+    file_path = os.path.join(ZIP_DIR, filename)
+    prod_url = f"https://arctic-map-yuy244yc7a-ue.a.run.app/api/shapefiles/{filename}"
+    print(f"[INFO] Fetching shapefile '{filename}' from production API: {prod_url}")
+    import urllib.request
+    req = urllib.request.Request(prod_url, headers={'User-Agent': 'Mozilla/5.0'})
+    with urllib.request.urlopen(req, timeout=60) as response:
+        if response.status == 200:
+            with open(file_path, "wb") as f:
+                f.write(response.read())
+        else:
+            raise Exception(f"Production API returned status {response.status}")
+
 @app.get("/api/shapefiles/{filename}")
 def download_shapefile(filename: str):
     if not filename.endswith(".zip"):
         filename += ".zip"
     file_path = os.path.join(ZIP_DIR, filename)
     if not os.path.exists(file_path):
-        raise HTTPException(status_code=404, detail="Shapefile not found")
+        try:
+            _fetch_shapefile_from_production(filename)
+        except Exception as e:
+            print(f"[ERROR] Failed to fetch shapefile '{filename}' from production API: {e}")
+            raise HTTPException(status_code=404, detail="Shapefile not found locally or on production.")
     return FileResponse(file_path, media_type="application/zip", filename=filename)

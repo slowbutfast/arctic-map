@@ -6,6 +6,7 @@ import Sidebar from "./components/Sidebar";
 import ThematicMap from "./components/ThematicMap";
 import Toolbar from "./components/Toolbar";
 import thematicMapConfigs from "./config/thematicMapConfigs";
+import ChatBot from "./components/ChatBot";
 import "./styles/Sidebar.css";
 import "./styles/ThematicMap.css";
 import "./styles/Toolbar.css";
@@ -136,37 +137,7 @@ const App = () => {
     }
   }, []);
 
-  // Inject Dify Chatbot Widget dynamically
-  useEffect(() => {
-    const difyToken = import.meta.env.VITE_DIFY_CHATBOT_TOKEN;
-    if (!difyToken) {
-      console.warn("Dify Chatbot Token not found. Set VITE_DIFY_CHATBOT_TOKEN in your .env file.");
-      return;
-    }
 
-    window.difyChatbotConfig = {
-      token: difyToken,
-      baseUrl: import.meta.env.VITE_DIFY_BASE_URL || "https://udify.app"
-    };
-
-    const script = document.createElement("script");
-    script.src = "https://udify.app/embed.min.js";
-    script.id = difyToken;
-    script.defer = true;
-    document.body.appendChild(script);
-
-    return () => {
-      // Cleanup script and widget if component unmounts
-      if (document.body.contains(script)) {
-        document.body.removeChild(script);
-      }
-      const bubble = document.getElementById("dify-chatbot-bubble");
-      if (bubble) bubble.remove();
-      const iframe = document.getElementById("dify-chatbot-iframe");
-      if (iframe) iframe.remove();
-      delete window.difyChatbotConfig;
-    };
-  }, []);
 
   return (
     <div style={{ display: "flex", flexDirection: "column", height: "100vh", width: "100vw", overflow: 'hidden' }}>
@@ -233,6 +204,7 @@ const App = () => {
           )}
         </div>
       </div>
+      <ChatBot />
     </div>
   );
 };

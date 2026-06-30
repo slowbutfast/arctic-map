@@ -2,7 +2,6 @@ from fastapi import FastAPI, HTTPException, Response, Query, status
 from fastapi.middleware.cors import CORSMiddleware
 import geopandas as gpd
 import pandas as pd
-import fiona
 from bs4 import BeautifulSoup
 import re
 from geopy.geocoders import Nominatim 
@@ -35,13 +34,30 @@ app.add_middleware(
 
 DB_PATH = "cpad.sqlite"
 
-def get_available_layers():
-    try:
-        layers = fiona.listlayers(DB_PATH)
-        return layers
-    except Exception as e:
-        print(f"[ERROR] Could not list layers: {e}")
+def get_layers_from_csv():
+    csv_path = os.path.join(os.path.dirname(os.path.abspath(__file__)), "..", "map-docs", "CPAD Datasets Theme & Subtheme Organization V2 - CPAD WebGIS App.csv")
+    if not os.path.exists(csv_path):
+        print(f"[WARN] CSV layer registry not found at: {csv_path}")
         return []
+    try:
+        import csv
+        with open(csv_path, mode='r', encoding='utf-8') as f:
+            reader = csv.DictReader(f)
+            return [row['layer_name'] for row in reader if row.get('layer_name')]
+    except Exception as e:
+        print(f"[ERROR] Failed to read CSV: {e}")
+        return []
+
+def get_available_layers():
+    if not os.path.exists(DB_PATH):
+        return get_layers_from_csv()
+    try:
+        import pyogrio
+        layers = pyogrio.list_layers(DB_PATH)
+        return [row[0] for row in layers]
+    except Exception as e:
+        print(f"[ERROR] Could not list layers from database: {e}")
+        return get_layers_from_csv()
 
 # souju's version for getting metadata using .xml files
 # def get_all_metadata_layer_names():
@@ -93,19 +109,52 @@ def get_layer_geojson(layer_name: str):
     if layer_name not in available_layers:
         raise HTTPException(status_code=404, detail=f"Layer '{layer_name}' not found.")
 
-    try:
-        gdf = gpd.read_file(DB_PATH, layer=layer_name)
-        if gdf.empty or gdf.geometry.isnull().all():
-            raise HTTPException(status_code=204, detail=f"Layer '{layer_name}' has no spatial data.")
+    # 1. Try loading from local SpatiaLite database if it exists
+    if os.path.exists(DB_PATH):
+        try:
+            gdf = gpd.read_file(DB_PATH, layer=layer_name, engine="pyogrio")
+            if gdf.empty or gdf.geometry.isnull().all():
+                raise HTTPException(status_code=204, detail=f"Layer '{layer_name}' has no spatial data.")
 
-        gdf = gdf[gdf.is_valid]
-        gdf = gdf.to_crs("EPSG:4326")
-        geojson = gdf.__geo_interface__
-        return geojson
-    
+            gdf = gdf[gdf.is_valid]
+            gdf = gdf.to_crs("EPSG:4326")
+            geojson = gdf.__geo_interface__
+            return geojson
+        except Exception as e:
+            print(f"[ERROR] Failed to load layer '{layer_name}' from database: {e}")
+
+    # 2. Fallback: Proxy/cache from production URL
+    cache_dir = os.path.join(os.path.dirname(os.path.abspath(__file__)), "cache")
+    os.makedirs(cache_dir, exist_ok=True)
+    cache_file = os.path.join(cache_dir, f"{layer_name}.json")
+
+    if os.path.exists(cache_file):
+        try:
+            with open(cache_file, "r", encoding="utf-8") as f:
+                return json.load(f)
+        except Exception as e:
+            print(f"[WARN] Failed to read cache file for '{layer_name}': {e}")
+
+    # Download from production API
+    prod_url = f"https://arctic-map-yuy244yc7a-ue.a.run.app/api/geojson/{layer_name}"
+    print(f"[INFO] Fetching layer '{layer_name}' from production API: {prod_url}")
+    try:
+        import urllib.request
+        req = urllib.request.Request(prod_url, headers={'User-Agent': 'Mozilla/5.0'})
+        with urllib.request.urlopen(req, timeout=30) as response:
+            if response.status == 200:
+                data = json.loads(response.read().decode("utf-8"))
+                try:
+                    with open(cache_file, "w", encoding="utf-8") as f:
+                        json.dump(data, f)
+                except Exception as e:
+                    print(f"[WARN] Failed to save cache for '{layer_name}': {e}")
+                return data
+            else:
+                raise HTTPException(status_code=response.status, detail=f"Production API returned status {response.status}")
     except Exception as e:
-        print(f"[ERROR] Failed to load layer '{layer_name}': {e}")
-        raise HTTPException(status_code=500, detail=f"Failed to load layer '{layer_name}'.")
+        print(f"[ERROR] Failed to fetch layer '{layer_name}' from production API: {e}")
+        raise HTTPException(status_code=500, detail=f"Failed to load layer '{layer_name}' locally or from production.")
 
 # @app.post("/api/spatial-query")
 # def spatial_query(
@@ -353,7 +402,15 @@ def spatial_query(request_data: SpatialQueryRequest):
 
         try:
             # use geopandas to read the layer file into a GeoDataFrame
-            gdf = gpd.read_file(DB_PATH, layer=layer_name)
+            if os.path.exists(DB_PATH):
+                gdf = gpd.read_file(DB_PATH, layer=layer_name, engine="pyogrio")
+            else:
+                layer_geojson = get_layer_geojson(layer_name)
+                if 'features' in layer_geojson and layer_geojson['features']:
+                    gdf = gpd.GeoDataFrame.from_features(layer_geojson['features'])
+                    gdf.set_crs("EPSG:4326", inplace=True)
+                else:
+                    gdf = gpd.GeoDataFrame()
             
             if gdf.empty or gdf.geometry.isnull().all():
                 print(f"Layer '{layer_name}' is empty or has no valid geometry. Skipping.")
@@ -387,8 +444,6 @@ def spatial_query(request_data: SpatialQueryRequest):
                         all_found_features.append(Feature.model_validate(feature))
 
 
-        except fiona.errors.DriverError as e:
-            print(f"[ERROR] Fiona driver error for layer '{layer_name}': {e}. Skipping.")
         except Exception as e:
             print(f"[ERROR] Spatial query failed for layer '{layer_name}': {e}. Skipping.")
 
